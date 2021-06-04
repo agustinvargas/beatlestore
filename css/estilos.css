@@ -1,0 +1,128 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+li {
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+p {
+  color: white;
+}
+
+.body-fondo {
+  min-height: 100vh;
+  width: 100%;
+  background-color: black;
+  position: relative;
+}
+
+.body-fondo::before {
+  content: "";
+  position: absolute;
+  background-image: url("../img/beatles-fondo.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  top: 0;
+  bottom: 0;
+  opacity: .4;
+  width: 100%;
+  z-index: -1;
+}
+
+.envoltura {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: auto auto auto auto;
+  grid-gap: 70px;
+  max-width: 1100px;
+  margin: auto;
+  padding: 25px;
+}
+
+#header {
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.menu-desk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  width: 45%;
+  cursor: pointer;
+}
+
+.carrito {
+  width: 50%;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.buscador__input {
+  grid-area: 2 / 1 / 3 / 3;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid white;
+  padding-bottom: 5px;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.tienda {
+  display: grid;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+  grid-area: 3 / 1 / 4 / 2;
+}
+
+.producto {
+  padding: 25px 0 50px 0;
+}
+
+.filtros {
+  grid-area: 2 / 2 / 4 / 3;
+}
+
+.filtros__formato {
+  margin: 25px 0;
+}
+
+.filtros__formato__input {
+  margin: 15px 5px 0 0;
+}
+
+.plataformas {
+  grid-area: 4 / 1 / 5 / 3;
+  padding: 0 25px;
+}
+
+.plataformas__spotify {
+  width: 50%;
+  float: left;
+  background-color: black;
+  padding: 20px;
+  margin: 0;
+  color: white;
+}
+
+.plataformas__deezer {
+  width: 50%;
+  float: left;
+  background-color: black;
+  padding: 20px;
+  margin: 0;
+  color: white;
+}
+/*# sourceMappingURL=estilos.css.map */
