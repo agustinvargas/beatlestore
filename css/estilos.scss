@@ -1,9 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap");
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: "Lato", sans-serif;
 }
-
 
 // etiquetas básicas
 li {
@@ -13,7 +14,9 @@ img {
     display: block;
     max-width: 100%;
 }
-p {
+
+p,
+::placeholder {
     color: white;
 }
 
@@ -43,7 +46,6 @@ p {
     width: 100%;
     background-color: rgb(0, 0, 0);
     position: relative;
-
 }
 .body-fondo::before {
     content: "";
@@ -55,7 +57,7 @@ p {
     background-size: cover;
     top: 0;
     bottom: 0;
-    opacity: .4;
+    opacity: 0.2;
     width: 100%;
     z-index: -1;
 }
@@ -69,6 +71,16 @@ p {
     margin: auto;
     padding: 25px;
 }
+
+// @media screen and (max-width: 1024px) {
+//     .envoltura {
+//         grid-template-areas: 
+//         "head head"
+//                        "nav  main"
+//                        "nav  foot";
+//     }
+
+// }
 
 // menu
 #header {
@@ -106,25 +118,79 @@ p {
 // tienda
 .tienda {
     display: grid;
-    grid-template-columns: 33.3% 33.3% 33.3%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 50px;
 
     grid-area: 3 / 1 / 4 / 2;
 }
 .producto {
-    padding: 25px 0 50px 0;
+    // padding: 25px 0 50px 0;
+    padding: 1em;
+    background-color: rgb(247, 247, 247);
+    border-radius: 4%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.producto__album {
+    font-size: 17px;
+    margin: 15px 0;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+.producto__precio {
+    margin: 7px 0;
+    font-weight: 900;
+    font-size: 14px;
+}
+.producto__formato {
+    margin: 7px 0;
+    font-weight: 700;
+    font-size: 14px;
+}
+.producto__año {
+    font-weight: 500;
+    font-size: 14px;
 }
 
+.agregar-carrito {
+    display: block;
+    margin: 25px 0 0 0;
+    // padding-left: 25px;
+    // padding-right: 25px;
+    padding: 5px 25px;
+    width: 100%;
+    text-transform: uppercase;
+    font-weight: 900;
+    cursor: pointer;
+}
 // filtros
-.filtros {
+.aside {
     grid-area: 2 / 2 / 4 / 3;
+    position: relative;
+}
+.filtros {
+    position: sticky;
+    display: block;
+    top: 30px;
+    left: 0;
+}
+
+.filtros__titulo {
+    color: white;
+    font-size: 20px;
 }
 
 .filtros__formato {
     margin: 25px 0;
+    color: white;
 }
 
 .filtros__formato__input {
-   margin: 15px 5px 0 0;
+    margin: 15px 5px 0 0;
 }
 
 // plataformas
@@ -147,5 +213,5 @@ p {
     background-color: black;
     padding: 20px;
     margin: 0;
-    color: white
+    color: white;
 }
