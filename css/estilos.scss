@@ -101,6 +101,10 @@ p,
     margin: auto;
 }
 
+.carrito:hover {
+    transform: skew(5deg);
+}
+
 // input del buscador
 .buscador__input {
     // grid-area: 2 / 1 / 3 / 3;
@@ -131,7 +135,15 @@ p,
     align-items: center;
     max-width: 80%;
     margin: 25px auto;
+    
+    
 }
+
+.producto:hover {
+    transition: 0.15s ease-in-out;
+    transform: scale(1.015);
+}
+
 .producto__album {
     font-size: 17px;
     margin: 15px 0;
@@ -157,8 +169,6 @@ p,
 .agregar-carrito {
     display: block;
     margin: 25px 0 0 0;
-    // padding-left: 25px;
-    // padding-right: 25px;
     padding: 5px 25px;
     width: 100%;
     text-transform: uppercase;

@@ -76,6 +76,10 @@ p,
   margin: auto;
 }
 
+.carrito:hover {
+  transform: skew(5deg);
+}
+
 .buscador__input {
   grid-area: buscador;
   width: 100%;
@@ -102,6 +106,11 @@ p,
   align-items: center;
   max-width: 80%;
   margin: 25px auto;
+}
+
+.producto:hover {
+  transition: 0.15s ease-in-out;
+  transform: scale(1.015);
 }
 
 .producto__album {
