@@ -1,6 +1,4 @@
-// OBJETOS
-
-// Hago el prototipo de los productos y le agrego un método que descuente una unidad de stock cuando haya una venta y otro que sume el Iva
+// PASO 1: CREO OBJETOS, ARRAY Y VARIABLES GLOBALES
 class Producto {
     constructor(titulo, precio, formato, año, stock) {
         this.titulo = titulo;
@@ -8,146 +6,132 @@ class Producto {
         this.formato = formato;
         this.año = año;
         this.stock = stock;
-
     }
     vendido() {
-        alert("Compra finalizada!")
-        return alert("Ahora quedan disponibles " + --this.stock + " unidades");
+        // alert("Compra finalizada!")
+        return console.log("De " + this.titulo + " ahora quedan disponibles " + --this.stock + " unidades");
     }
     sumarIva() {
-        return this.precio = this.precio * 1.21;
+        return this.precio = parseFloat((this.precio * 1.21).toFixed(2));
     }
 }
 
-// Creo tres CDs
 
-let album1 = new Producto("A Hard Day's Night", 1190, "CD", 1964, 5);
-let album2 = new Producto("With the Beatles", 990, "CD", 1963, 5);
-let album3 = new Producto("Abbey Road", 1290, "CD", 1969, 5);
-
+let album1 = new Producto("A Hard Day's Night", 1199, "CD", 1964, 5);
+let album2 = new Producto("With the Beatles", 990, "CD", 1963, 6);
+let album3 = new Producto("Abbey Road", 1299, "CD", 1969, 7);
 
 
-// FUNCIONES
+let carrito = [];
+let rePregunta = undefined;
+let total = 0;
 
-// el usuario elige qué disco está interesado en comprar, se le muestra el precio de lista y a continuación el precio total con IVA
-let eleccion = () => {
-    respuesta = parseInt(prompt(`¿Qué álbum te interesa?\n1 - ${album1.titulo}\n2 - ${album2.titulo}\n3 - ${album3.titulo}`));
-    switch (respuesta) {
+// PASO 2: MOSTRAR LISTA Y AGREGAR EL PRODUCTO AL CARRITO
+
+function agregarCarrito() {
+    let preguntaInicial = parseInt(prompt(`¿Qué álbum te interesa agregar al carrito?\n1 - ${album1.titulo}\n2 - ${album2.titulo}\n3 - ${album3.titulo}`));
+    switch (preguntaInicial) {
         case 1:
-            alert("Cuesta " + "$" + album1.precio);
-            alert("El precio con Iva es " + album1.sumarIva());
-            compraAceptada = prompt("SI para comprar / NO para regresar");
-            condicional();
-            break
+            return carrito.push(album1)
         case 2:
-            alert("Cuesta " + "$" + album2.precio);
-            alert("El precio con Iva es " + album2.sumarIva());
-            compraAceptada = prompt("SI para comprar / NO para regresar");
-            condicional();
-            break
+            return carrito.push(album2)
         case 3:
-            alert("Cuesta " + "$" + album3.precio);
-            alert("El precio con Iva es " + album3.sumarIva());
-            compraAceptada = prompt("SI para comprar / NO para regresar");
-            condicional();
-            break
+            return carrito.push(album3)
         default:
-            alert("Opción inválida")
+            return alert("Opción inválida")
     }
+
+} agregarCarrito()
+
+//PASO 3: PREGUNTAR SI QUIERE AGREGAR OTRO PRODUCTO. SI DICE "SI", MOSTRAR NUEVAMENTE PARA PODER SEGUIR SUMANDO PRODUCTOS
+function rePreguntar() {
+
+    rePregunta = prompt("¿Agregar otro producto al carrito?" + "\n" + "SI / NO");
+    if ((rePregunta.toUpperCase() == "SI") || (rePregunta.toUpperCase() == "SÍ")) {
+        return agregarCarrito();
+    }
+
+}
+do {
+    rePreguntar();
+} while (rePregunta.toUpperCase() == "SI" || rePregunta.toUpperCase() == "SÍ");
+
+
+// PASO 5: MOSTRAR LOS PRODUCTOS AGREGADOS
+function mostrarCarrito() {
+    // for (const index of carrito) {
+    //     alert("Agregó los siguientes productos:\n" + index.titulo);
+    // }
+    alert("Agregó al carrito los siguientes productos:\n" + carrito.map(e => e.titulo).join("\n"));
+} mostrarCarrito()
+
+// PASO 6: SUMAR PRECIOS DE PRODUCTOS AGREGADOS AL CARRITO
+
+function calcularTotal() {
+
+    for (const i of carrito) {
+        i.sumarIva();
+    }
+    for (const i of carrito) {
+        total += i.precio;
+    }
+    return alert("Su total con IVA incluido es $" + total)
 }
 
-// funcion para que el usuario acepte o no comprar el CD
-function condicional() {
-    if (compraAceptada == "SI" || compraAceptada == "si" || compraAceptada == "sí") {
-        return cuotas();
+calcularTotal()
 
-    } else if (compraAceptada == "NO" || compraAceptada == "no") {
-        alert("Quizá la próxima...")
-        return eleccion();
-    } else {
+console.log(total)
+
+
+// PASO 7: CALCULAR CUOTAS Y MOSTRAR POR CONSOLA LA DISMINUCIÓN DEL STOCK DE/LOS DISCOS COMPRADOS
+
+let cantCuotas = parseInt(prompt("¿En cuántas cuotas pagará? Seleccioná una opción\nOPCION 1 - Tres cuotas\nOPCION 2 - Seis cuotas\nOPCION 3 - Doce cuotas"));
+switch (cantCuotas) {
+    case 1:
+        cuotasFinales = total / 3;
+        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
+        for (const i of carrito) {
+            i.vendido();
+        }
+        break
+    case 2:
+        cuotasFinales = total / 6;
+        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
+        for (const i of carrito) {
+            i.vendido();
+        }
+        break
+    case 3:
+        cuotasFinales = total / 12;
+        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
+        for (const i of carrito) {
+            i.vendido();
+        }
+        break
+    default:
         alert("Opción inválida")
-    }
-}
-//funcion para que el usuario eliga las cuotas
-function cantCuotas() {
-    return parseInt(prompt("¿En cuántas cuotas? Seleccioná una opción\nOPCION 1 - 3 cuotas\nOPCION 2 - 6 cuotas\nOPCION 3 - 12 cuotas"));
 }
 
+// PASO 8: ORDENAR EN CONSOLA EL CARRITO SEGÚN EL PRECIO, DE MENOR A MAYOR
 
-// dependiendo del CD seleccionado, se eligen las cuotas y se calcula el valor que hay que pagar por mes. Con la compra consumada, se descuenta 1 al stock
-function cuotas() {
-    if (respuesta == 1) {
-
-        switch (cantCuotas()) {
-            case 1:
-                cuotasFinales = album1.precio / 3;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album1.vendido()
-                break
-            case 2:
-                cuotasFinales = album1.precio / 6;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album1.vendido()
-                break
-            case 3:
-                cuotasFinales = album1.precio / 12;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album1.vendido()
-                break
-            default:
-                alert("Opción inválida")
-        }
-    } else if (respuesta == 2) {
-        switch (cantCuotas()) {
-            case 1:
-                cuotasFinales = album2.precio / 3;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album2.vendido()
-                break
-            case 2:
-                cuotasFinales = album2.precio / 6;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album2.vendido()
-                break
-            case 3:
-                cuotasFinales = album2.precio / 12;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album2.vendido()
-                break
-            default:
-                alert("Opción inválida")
-        }
-    } else if (respuesta == 3) {
-        switch (cantCuotas()) {
-            case 1:
-                cuotasFinales = album3.precio / 3;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album3.vendido()
-                break
-            case 2:
-                cuotasFinales = album3.precio / 6;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album3.vendido()
-                break
-            case 3:
-                cuotasFinales = album3.precio / 12;
-                alert("Pagará " + cuotasFinales + " por mes");
-                album3.vendido()
-                break
-            default:
-                alert("Opción inválida")
-        }
-    } else {
-        alert("Opción inválida")
-    }
-}
+function ordenarPorPrecio() {
+    carrito.sort(function (a, b) {
+        return a.precio - b.precio;
+    });
+    console.log(carrito);
+} ordenarPorPrecio()
 
 
-
-
-// MOSTRAR FUNCIONES
-eleccion()
-//controlar que el stock haya cambiado tras la venta
-console.log(album1.stock)
-console.log(album2.stock)
-console.log(album3.stock)
+// // También se podría ordenar por el nombre del disco [descomentar el código de abajo y comentar el código de arriba] 
+// function ordenarTitulo() {
+//     carrito.sort(function (a, b) {
+//         if (a.titulo > b.titulo) {
+//             return 1;
+//         }
+//         if (a.titulo < b.titulo) {
+//             return -1;
+//         }
+//         return 0;
+//     });
+//     console.log(carrito);
+// } ordenarTitulo()
