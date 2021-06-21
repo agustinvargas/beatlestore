@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="css\estilos.css">
     <title>Home | Beatlestore</title>
 </head>
@@ -28,55 +29,13 @@
         </header>
 
         <!--  Buscador -->
-        <div class="buscador">
+        <div id="buscador">
             <input class="buscador__input" type="text" placeholder="Buscá un álbum">
         </div>
 
 
         <!--  Productos -->
         <div class="tienda">
-            <div class="producto">
-                <img class="producto__img" src="img\hard-days-night-cd.png" alt="Tapa del álbum">
-                <h2 class="producto__album">A Hard Day's Night</h2>
-                <span class="producto__precio">$1190</span>
-                <span class="producto__formato">CD <span class="producto__año">1964</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
-            <div class="producto">
-                <img class="producto__img" src="img\hard-days-night-vinilo.png" alt="Tapa del álbum">
-                <h2 class="producto__album">A Hard Day's Night</h2>
-                <span class="producto__precio">$2990</span>
-                <span class="producto__formato">Vinilo <span class="producto__año">1964</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
-            <div class="producto">
-                <img class="producto__img" src="img\with-the-beatles-cd.png" alt="Tapa del álbum">
-                <h2 class="producto__album">With the Beatles</h2>
-                <span class="producto__precio">$990</span>
-                <span class="producto__formato">CD <span class="producto__año">1963</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
-            <div class="producto">
-                <img class="producto__img" src="img\with-the-beatles-vinilo.png" alt="Tapa del álbum">
-                <h2 class="producto__album">With the Beatles</h2>
-                <span class="producto__precio">$1790</span>
-                <span class="producto__formato">Vinilo <span class="producto__año">1963</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
-            <div class="producto">
-                <img class="producto__img" src="img\abbey-road-vinilo.png" alt="Tapa del álbum">
-                <h2 class="producto__album">Abbey Road</h2>
-                <span class="producto__precio">$3290</span>
-                <span class="producto__formato">Vinilo <span class="producto__año">1969</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
-            <div class="producto">
-                <img class="producto__img" src="img\abbey-road-cd.png" alt="Tapa del álbum">
-                <h2 class="producto__album">Abbey Road</h2>
-                <span class="producto__precio">$1290</span>
-                <span class="producto__formato">CD <span class="producto__año">1969</span></span>
-                <button class="agregar-carrito">Agregar</button>
-            </div>
            
         </div>
 
@@ -90,7 +49,7 @@
                     <input class="filtros__formato__input" type="checkbox" name="Vinilo" value="Vinilo">
                     <label for="Vini">Vinilo</label>
                 </form>
-
+                <!-- <button class="ordenarPrecio">Ordenar por Precio</button> -->
                 <hr>
 
                 <p>ACÁ IRÍA OTROS FILTROS COMO: PRECIO Y AÑO DE PUBLICACIÓN. MOSTRAR CON BARRA INTERACTIVA</p>

@@ -138,6 +138,14 @@ p,
   font-size: 14px;
 }
 
+.producto__stock {
+  font-weight: 500;
+  font-size: 14px;
+  display: block;
+  margin: auto;
+  padding: 20px;
+}
+
 .agregar-carrito {
   display: block;
   margin: 25px 0 0 0;

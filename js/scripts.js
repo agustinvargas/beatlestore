@@ -1,137 +1,131 @@
-// PASO 1: CREO OBJETOS, ARRAY Y VARIABLES GLOBALES
+//CREO OBJETOS, ARRAY Y VARIABLES GLOBALES
+
 class Producto {
-    constructor(titulo, precio, formato, año, stock) {
+    constructor(id, img, titulo, precio, formato, año, stock) {
+        this.id = id;
+        this.img = img;
         this.titulo = titulo;
-        this.precio = precio;
+        this.precio = parseFloat(precio);
         this.formato = formato;
         this.año = año;
         this.stock = stock;
     }
     vendido() {
-        // alert("Compra finalizada!")
-        return console.log("De " + this.titulo + " ahora quedan disponibles " + --this.stock + " unidades");
-    }
+        if (this.stock > 0) {
+            let stockA = --this.stock;
+            // let stock = document.querySelectorAll(".producto__stock");
+
+            // stock.textContent = `${stockA}`
+
+
+            console.log(stockA);
+        } else {
+            alert("No hay stock");
+        }
+    };
     sumarIva() {
-        return this.precio = parseFloat((this.precio * 1.21).toFixed(2));
+        this.precio = parseFloat((this.precio * 1.21).toFixed(2));
     }
 }
 
-
-let album1 = new Producto("A Hard Day's Night", 1199, "CD", 1964, 5);
-let album2 = new Producto("With the Beatles", 990, "CD", 1963, 6);
-let album3 = new Producto("Abbey Road", 1299, "CD", 1969, 7);
-
+let productos = [];
+productos.push(
+    new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 5),
+    new Producto(2, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
+    new Producto(3, "img/with-the-beatles-cd.png", "With the Beatles", 990, "CD", 1963, 6),
+    new Producto(4, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
+    new Producto(5, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
+    new Producto(6, "img/abbey-road-cd.png", "Abbey Road", 1290, "CD", 1969, 7),
+);
+console.log(productos)
 
 let carrito = [];
-let rePregunta = undefined;
-let total = 0;
 
-// PASO 2: MOSTRAR LISTA Y AGREGAR EL PRODUCTO AL CARRITO
+// DOM: AGREGO LOS PRODUCTOS DEL ARRAY A LA TIENDA
 
-function agregarCarrito() {
-    let preguntaInicial = parseInt(prompt(`¿Qué álbum te interesa agregar al carrito?\n1 - ${album1.titulo}\n2 - ${album2.titulo}\n3 - ${album3.titulo}`));
-    switch (preguntaInicial) {
-        case 1:
-            return carrito.push(album1)
-        case 2:
-            return carrito.push(album2)
-        case 3:
-            return carrito.push(album3)
-        default:
-            return alert("Opción inválida")
-    }
-
-} agregarCarrito()
-
-//PASO 3: PREGUNTAR SI QUIERE AGREGAR OTRO PRODUCTO. SI DICE "SI", MOSTRAR NUEVAMENTE PARA PODER SEGUIR SUMANDO PRODUCTOS
-function rePreguntar() {
-
-    rePregunta = prompt("¿Agregar otro producto al carrito?" + "\n" + "SI / NO");
-    if ((rePregunta.toUpperCase() == "SI") || (rePregunta.toUpperCase() == "SÍ")) {
-        return agregarCarrito();
-    }
-
-}
-do {
-    rePreguntar();
-} while (rePregunta.toUpperCase() == "SI" || rePregunta.toUpperCase() == "SÍ");
+productos.forEach(producto => {
+    const productosContenedor = document.createElement("div");
+    productosContenedor.setAttribute("class", "producto");
+    productosContenedor.innerHTML = `
+    <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
+    <h2 class="producto__album">${producto.titulo}</h2>
+    <span class="producto__precio">$${producto.precio}</span>
+    <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
+    <span class="producto__stock">${producto.stock}</span>
+    <button id="${producto.id}" class="agregar-carrito">Agregar</button>
+    `;
+    const tienda = document.querySelector(".tienda")
+    tienda.appendChild(productosContenedor);
+    console.log(productosContenedor);
 
 
-// PASO 5: MOSTRAR LOS PRODUCTOS AGREGADOS
-function mostrarCarrito() {
-    // for (const index of carrito) {
-    //     alert("Agregó los siguientes productos:\n" + index.titulo);
-    // }
-    alert("Agregó al carrito los siguientes productos:\n" + carrito.map(e => e.titulo).join("\n"));
-} mostrarCarrito()
+});
 
-// PASO 6: SUMAR PRECIOS DE PRODUCTOS AGREGADOS AL CARRITO
+// AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
+const buscador = document.querySelector(".buscador__input")
+buscador.addEventListener("keyup", (e) => {
+    const busqueda = e.target.value.toUpperCase();
+    const productosVenta = document.querySelectorAll(".producto")
 
-function calcularTotal() {
-
-    for (const i of carrito) {
-        i.sumarIva();
-    }
-    for (const i of carrito) {
-        total += i.precio;
-    }
-    return alert("Su total con IVA incluido es $" + total)
-}
-
-calcularTotal()
-
-console.log(total)
-
-
-// PASO 7: CALCULAR CUOTAS Y MOSTRAR POR CONSOLA LA DISMINUCIÓN DEL STOCK DE/LOS DISCOS COMPRADOS
-
-let cantCuotas = parseInt(prompt("¿En cuántas cuotas pagará? Seleccioná una opción\nOPCION 1 - Tres cuotas\nOPCION 2 - Seis cuotas\nOPCION 3 - Doce cuotas"));
-switch (cantCuotas) {
-    case 1:
-        cuotasFinales = total / 3;
-        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
-        for (const i of carrito) {
-            i.vendido();
+    for (producto of productosVenta) {
+        const titulo = producto.children[1];
+        const tituloCoincidir = titulo.textContent;
+        if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
+            producto.style.display = "flex";
+        } else {
+            producto.style.display = "none";
         }
-        break
-    case 2:
-        cuotasFinales = total / 6;
-        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
-        for (const i of carrito) {
-            i.vendido();
-        }
-        break
-    case 3:
-        cuotasFinales = total / 12;
-        alert("Pagará $" + parseFloat(cuotasFinales.toFixed(2)) + " por mes");
-        for (const i of carrito) {
-            i.vendido();
-        }
-        break
-    default:
-        alert("Opción inválida")
-}
+    }
+})
 
-// PASO 8: ORDENAR EN CONSOLA EL CARRITO SEGÚN EL PRECIO, DE MENOR A MAYOR
-
-function ordenarPorPrecio() {
-    carrito.sort(function (a, b) {
-        return a.precio - b.precio;
+// AL TOCAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK POR CONSOLA
+const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
+for (const boton of btnAgregarCarrito) {
+    boton.addEventListener('click', (event) => {
+        const botonClickeado = event.target;
+        console.log(botonClickeado.id);
+        const productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
+        
+        console.log(productoAgregado)
+        productoAgregado.vendido();
+        console.log(productos);
     });
-    console.log(carrito);
-} ordenarPorPrecio()
+}
 
 
-// // También se podría ordenar por el nombre del disco [descomentar el código de abajo y comentar el código de arriba] 
-// function ordenarTitulo() {
-//     carrito.sort(function (a, b) {
-//         if (a.titulo > b.titulo) {
-//             return 1;
-//         }
-//         if (a.titulo < b.titulo) {
-//             return -1;
-//         }
-//         return 0;
+
+// const filtroPrecio = document.querySelector(".ordenarPrecio");
+// filtroPrecio.onclick = () => {ordenarPorPrecio()}
+
+// function ordenarPorPrecio() {
+//     const precios = document.querySelector(".producto__precio");
+//     for (precio of precios) {
+
+//     }
+//     productos.sort(function (a, b) {
+//         return a.precio - b.precio;
 //     });
-//     console.log(carrito);
-// } ordenarTitulo()
+//     // let tiendaR = document.querySelector(".producto");
+//     // tiendaR.parentNode.removeChild(tiendaR);
+//     // document.querySelector(".tienda").appendChild(tiendaR)
+//     // productos.forEach(producto => {
+//     //     const productosContenedor = document.createElement("div");
+//     //     productosContenedor.setAttribute("class", "producto");
+//     //     productosContenedor.innerHTML = `
+//     //     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
+//     //     <h2 class="producto__album">${producto.titulo}</h2>
+//     //     <span class="producto__precio">$${producto.precio}</span>
+//     //     <span class="producto__formato">${producto.formato}<span class="producto__año">${producto.año}</span></span>
+//     //     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
+//     //     `;
+//     //     const tienda = document.querySelector(".tienda")
+//     //     tienda.appendChild(productosContenedor);
+//     //     console.log(productosContenedor);
+
+
+//     // });
+
+
+
+//     console.log(productos);
+// }  
