@@ -101,6 +101,9 @@ for (const boton of btnAgregarCarrito) {
 
             padreEtiqueta.replaceChild(span, hijoEtiqueta);
 
+            carrito.push(productoAgregado);
+            console.log(carrito)
+
         } else {
             alert("No queda stock de este producto")
         }
