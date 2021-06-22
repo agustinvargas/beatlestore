@@ -10,19 +10,19 @@ class Producto {
         this.año = año;
         this.stock = stock;
     }
-    vendido() {
-        if (this.stock > 0) {
-            let stockA = --this.stock;
-            // let stock = document.querySelectorAll(".producto__stock");
+    // vendido() {
+    //     if (this.stock > 0) {
+    //         let stockA = --this.stock;
+    //         // let stock = document.querySelectorAll(".producto__stock");
 
-            // stock.textContent = `${stockA}`
+    //         // stock.textContent = `${stockA}`
 
 
-            console.log(stockA);
-        } else {
-            alert("No hay stock");
-        }
-    };
+    //         console.log(stockA);
+    //     } else {
+    //         alert("No hay stock");
+    //     }
+    // };
     sumarIva() {
         this.precio = parseFloat((this.precio * 1.21).toFixed(2));
     }
@@ -30,7 +30,7 @@ class Producto {
 
 let productos = [];
 productos.push(
-    new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 5),
+    new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 2),
     new Producto(2, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
     new Producto(3, "img/with-the-beatles-cd.png", "With the Beatles", 990, "CD", 1963, 6),
     new Producto(4, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
@@ -51,14 +51,12 @@ productos.forEach(producto => {
     <h2 class="producto__album">${producto.titulo}</h2>
     <span class="producto__precio">$${producto.precio}</span>
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
-    <span class="producto__stock">${producto.stock}</span>
+    <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
     `;
     const tienda = document.querySelector(".tienda")
     tienda.appendChild(productosContenedor);
     console.log(productosContenedor);
-
-
 });
 
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
@@ -78,7 +76,8 @@ buscador.addEventListener("keyup", (e) => {
     }
 })
 
-// AL TOCAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK POR CONSOLA
+// AL TOCAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK
+
 const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
 for (const boton of btnAgregarCarrito) {
     boton.addEventListener('click', (event) => {
@@ -86,12 +85,27 @@ for (const boton of btnAgregarCarrito) {
         console.log(botonClickeado.id);
         const productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
         
-        console.log(productoAgregado)
-        productoAgregado.vendido();
-        console.log(productos);
-    });
-}
+        if (productoAgregado.stock > 0) {
+            alert(`Agregó el producto ${productoAgregado.titulo}`);
+            --productoAgregado.stock;
 
+            var id = `producto__stock${productoAgregado.id}`
+            var span = document.createElement("span");
+            span.setAttribute("id", id);
+
+            var productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
+            span.appendChild(productoAgregadoStock);
+
+            var padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
+            var hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
+
+            padreEtiqueta.replaceChild(span, hijoEtiqueta);
+
+        } else {
+            alert("No queda stock de este producto")
+        }
+    })
+}
 
 
 // const filtroPrecio = document.querySelector(".ordenarPrecio");
