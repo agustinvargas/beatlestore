@@ -77,38 +77,136 @@ buscador.addEventListener("keyup", (e) => {
 })
 
 // AL TOCAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK
-
 const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
 for (const boton of btnAgregarCarrito) {
     boton.addEventListener('click', (event) => {
         const botonClickeado = event.target;
         console.log(botonClickeado.id);
-        const productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
-        
+        let productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
+
         if (productoAgregado.stock > 0) {
-            alert(`Agregó el producto ${productoAgregado.titulo}`);
+            // alert(`Agregó el producto ${productoAgregado.titulo}`);
+            swal({
+                // title: "Good job!",
+                text: `Agregaste el producto ${productoAgregado.titulo}`,
+                icon: "success",
+            });
+
             --productoAgregado.stock;
 
-            var id = `producto__stock${productoAgregado.id}`
-            var span = document.createElement("span");
+            let id = `producto__stock${productoAgregado.id}`
+            let span = document.createElement("span");
             span.setAttribute("id", id);
 
-            var productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
+            let productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
             span.appendChild(productoAgregadoStock);
 
-            var padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
-            var hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
+            let padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
+            let hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
 
             padreEtiqueta.replaceChild(span, hijoEtiqueta);
 
-            carrito.push(productoAgregado);
-            console.log(carrito)
+            carrito.unshift(productoAgregado);
+
+
+            localS()
+            let pRecientes = document.getElementById("recientes");
+            pRecientes.style.display = "none";
+
+            // // const guardarLocal = (clave, valor) => { localStorage.setItem(clave, valor) };
+            // // for (const producto of carrito) {
+            // //     guardarLocal(producto.id, JSON.stringify(producto));
+            // // }
 
         } else {
-            alert("No queda stock de este producto")
+            // alert("No queda stock de este producto")
+            swal({
+                title: "Ups!",
+                text: "No quedan unidades disponibles de este producto",
+                icon: "error",
+            });
         }
     })
 }
+
+// AGREGAR CARRITO A LOCAL STORAGE Y MOSTRAR CANTIDAD DE ELEMENTOS AGREGADOS ARRIBA DEL BOTON DEL CARRITO
+let carritoNum = document.getElementById("carrito__numero");
+if (carrito.length == 0) {
+    carritoNum.style.display = "none"
+} else {
+    carritoNum.innerHTML = carrito.length;
+}
+
+
+
+function localS() {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    JSON.parse(localStorage.getItem("carrito"));
+    carritoNum = document.getElementById("carrito__numero");
+    carritoNum.style.display = "inherit"
+    carritoNum.innerHTML = carrito.length;
+    console.log(carrito.length)
+
+}
+
+// MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
+if (localStorage.getItem("carrito") === null || localStorage.hasOwnProperty('carrito') === false) {
+    let pRecientes = document.getElementById("recientes");
+    pRecientes.style.display = "none";
+}
+
+// cambiar a singular si en el storage hay un solo producto
+if (JSON.parse(localStorage.getItem("carrito")) != null && JSON.parse(localStorage.getItem("carrito").length === 1)) {
+    let pRecientes = document.querySelector(".recientes__titulo");
+    pRecientes.textContent = "Producto agregado por última vez";
+}
+
+
+var productosDelLs = JSON.parse(localStorage.getItem("carrito"));
+console.log(productosDelLs);
+productosDelLs.forEach(producto => {
+    const div = document.createElement("div");
+    div.setAttribute("class", "recientes__producto");
+    div.innerHTML = `
+   
+    <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
+    <h2 class="producto__album">${producto.titulo}</h2>
+    
+    <span class="producto__formato">${producto.formato}</span>
+    
+    `;
+    const recientes = document.querySelector("#recientes__productos")
+    recientes.appendChild(div);
+});
+
+
+// AL HACER CLIC EN COMPRAR (EN SECCION RECIENTES --SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
+const btnComprarProductosLS = document.querySelector(".recientes__comprar");
+btnComprarProductosLS.addEventListener('click', (evento) => {
+
+    let carritoLs = JSON.parse(localStorage.getItem("carrito"));
+    if (!document.getElementById("productoLocalModal")) {
+        for (let producto of carritoLs) {
+            const div = document.createElement("div");
+            div.setAttribute("id", "productoLocalModal")
+            div.innerHTML = `<b>${producto.titulo}</b> en ${producto.formato} ($${producto.precio})`;
+            const modalProductosLocalStorage = document.querySelector("#modal__productosLocalStorage");
+            modalProductosLocalStorage.appendChild(div)
+        }
+    }
+    // AL HACAER CLICK EN EL BOTON "QUITAR", SE REMUEVEN LOS PRODUCTOS DEL LOCAL STORAGE Y SE REMUEVE EN EL HTML LA SECCION "PRODUCTOS AGREGADOS POR ULTIMA VEZ"
+    const btnQuitarProductosLS = document.querySelector("#modal__quitarProductosLS");
+    btnQuitarProductosLS.addEventListener('click', (evento) => {
+        localStorage.getItem("carrito")
+        localStorage.removeItem("carrito");
+
+        const recientes = document.querySelector("#recientes");
+        recientes.parentElement.removeChild(recientes)
+    })
+})
+
+
+
 
 
 // const filtroPrecio = document.querySelector(".ordenarPrecio");
