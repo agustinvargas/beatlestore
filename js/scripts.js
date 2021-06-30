@@ -1,4 +1,4 @@
-//CREO OBJETOS, ARRAY Y VARIABLES GLOBALES
+//CREA OBJETOS, ARRAY DE PRODUCTOS
 
 class Producto {
     constructor(id, img, titulo, precio, formato, año, stock) {
@@ -42,7 +42,7 @@ console.log(productos)
 let carrito = [];
 
 // DOM: AGREGO LOS PRODUCTOS DEL ARRAY A LA TIENDA
-function Ordenar() {
+function producosTienda() {
     productos.forEach(producto => {
         const productosContenedor = document.createElement("div");
         productosContenedor.setAttribute("class", "producto");
@@ -59,7 +59,8 @@ function Ordenar() {
         console.log(productosContenedor);
     });
     AgregarCarrito()
-} Ordenar()
+} producosTienda() 
+
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
 const buscador = document.querySelector(".buscador__input")
 buscador.addEventListener("keyup", (e) => {
@@ -70,9 +71,9 @@ buscador.addEventListener("keyup", (e) => {
         const titulo = producto.children[1];
         const tituloCoincidir = titulo.textContent;
         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-            if (producto.style.display != "none") {
+            // if (producto.style.display != "none") {
                 producto.style.display = "flex";
-            }
+            // }
         } else {
             producto.style.display = "none";
         }
@@ -87,10 +88,9 @@ filtroCD.addEventListener("click", (e) => {
     const productosVenta = document.querySelectorAll(".producto")
 
     for (producto of productosVenta) {
-
         const formato = producto.children[3];
         const formatoCoincidir = formato.textContent;
-        if (formatoCoincidir.toUpperCase().includes(filtro)) {
+        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
 
             producto.style.display = "flex";
 
@@ -120,11 +120,8 @@ filtroVinilo.addEventListener("click", (e) => {
 // Mostrar todos los productos
 const filtroTodosFormatos = document.querySelector("#filtro-todos-formatos")
 filtroTodosFormatos.addEventListener("click", (e) => {
-    const elementos = document.getElementsByClassName("producto");
-    while (elementos.length > 0) {
-        elementos[0].parentNode.removeChild(elementos[0]);
-    }
-    Ordenar();})
+    actualizaTienda()
+})
 
 // FILTRAR POR PRECIO
 const filtroPrecio = document.querySelector("#precio")
@@ -162,11 +159,7 @@ ordenAscendente.addEventListener("click", (e) => {
         }
         return 0;
     })
-    const elementos = document.getElementsByClassName("producto");
-    while (elementos.length > 0) {
-        elementos[0].parentNode.removeChild(elementos[0]);
-    }
-    Ordenar();
+    actualizaTienda()
 })
 // Ordenar de más antiguo a más nuevo
 const ordenDescendente = document.querySelector("#filtro-año-antiguo")
@@ -181,15 +174,11 @@ ordenDescendente.addEventListener("click", (e) => {
         }
         return 0;
     })
-    let elementos = document.getElementsByClassName("producto");
-    while (elementos.length > 0) {
-        elementos[0].parentNode.removeChild(elementos[0]);
-    }
-    Ordenar();
+    actualizaTienda()
 })
 
 
-// AL CLICKEAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK
+// AL CLICKEAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO (SE AGREGA AL ARRAY) Y SE LE RESTA UNO AL STOCK
 function AgregarCarrito() {
     const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
     for (const boton of btnAgregarCarrito) {
@@ -250,6 +239,7 @@ function localS() {
     console.log(carrito.length)
 }
 
+// el número se muestra si hay elementos en el carrito
 let carritoNum = document.getElementById("carrito__numero");
 if (carrito.length == 0) {
     carritoNum.style.display = "none"
@@ -288,7 +278,7 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false)
 
 // AL HACER CLIC EN COMPRAR (EN SECCION AGREGADOS POR ULTIMA VEZ -SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
 const btnComprarProductosLS = document.querySelector(".recientes__comprar");
-btnComprarProductosLS.addEventListener('click', (evento) => {
+btnComprarProductosLS.addEventListener('click', () => {
 
     let carritoLs = JSON.parse(localStorage.getItem("carrito"));
     if (!document.getElementById("productoLocalModal")) {
@@ -305,7 +295,7 @@ btnComprarProductosLS.addEventListener('click', (evento) => {
     }
     // AL HACER CLICK EN EL BOTON "QUITAR", SE REMUEVEN LOS PRODUCTOS DEL LOCAL STORAGE Y SE REMUEVE EN EL HTML LA SECCION "PRODUCTOS AGREGADOS POR ULTIMA VEZ"
     const btnQuitarProductosLS = document.querySelector("#modal__quitarProductosLS");
-    btnQuitarProductosLS.addEventListener('click', (evento) => {
+    btnQuitarProductosLS.addEventListener('click', () => {
         localStorage.getItem("carrito")
         localStorage.removeItem("carrito");
 
@@ -313,3 +303,12 @@ btnComprarProductosLS.addEventListener('click', (evento) => {
         recientes.parentElement.removeChild(recientes)
     })
 })
+
+// FUNCION PARA BORRAR LOS ELEMENTOS DE INICIO DE LA TIENDA Y ACTUALIZARLOS VOLVIENDOLOS A IMPRIMIR
+function actualizaTienda(){
+    const elementos = document.getElementsByClassName("producto");
+    while (elementos.length > 0) {
+        elementos[0].parentNode.removeChild(elementos[0]);
+    }
+    producosTienda();
+}
