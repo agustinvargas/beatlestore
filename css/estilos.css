@@ -46,8 +46,8 @@ p,
 .envoltura {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: auto auto auto auto auto auto;
-  grid-template-areas: "header" "buscador" "filtros" "recientes" "tienda" "plataformas";
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas: "header" "buscador" "filtros" "tienda";
   grid-gap: 70px;
   max-width: 1100px;
   margin: auto;
@@ -81,7 +81,7 @@ p,
   margin: auto;
   transform: translate(-100%, -50%);
   color: white;
-  background-color: chocolate;
+  background-color: #81ab69;
   padding: 1px 5px;
   border-radius: 50%;
 }
@@ -112,8 +112,8 @@ p,
 }
 
 #recientes {
-  grid-area: recientes;
   display: grid;
+  margin-bottom: 15%;
 }
 
 .recientes__encabezado {
@@ -128,11 +128,7 @@ p,
 }
 
 .recientes__comprar {
-  text-transform: uppercase;
-  font-weight: 900;
-  cursor: pointer;
-  padding: 10px 20px;
-  margin-left: 10px;
+  font-weight: 700;
 }
 
 #recientes__productos {
@@ -211,13 +207,15 @@ p,
 }
 
 .agregar-carrito {
-  display: block;
-  margin: 25px 0 0 0;
-  padding: 5px 25px;
-  width: 100%;
-  text-transform: uppercase;
-  font-weight: 900;
-  cursor: pointer;
+  background-color: #7cd1f9;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 24px;
+  margin: 0;
 }
 
 .aside {
@@ -246,10 +244,6 @@ p,
   margin: 15px 5px 0 0;
 }
 
-.plataformas {
-  grid-area: plataformas;
-}
-
 .plataformas__spotify {
   background-color: black;
   padding: 20px;
@@ -267,7 +261,7 @@ p,
 @media screen and (min-width: 1024px) {
   .envoltura {
     grid-template-columns: 3fr 1fr;
-    grid-template-areas: "header header" "buscador filtros" "recientes filtros" "tienda filtros" "plataformas plataformas";
+    grid-template-areas: "header header" "buscador filtros" "tienda filtros";
   }
   .tienda {
     display: grid;
@@ -286,5 +280,14 @@ p,
     float: left;
     width: 50%;
   }
+}
+
+ol,
+ul {
+  padding: 0;
+}
+
+h3 {
+  font-size: 1.2rem;
 }
 /*# sourceMappingURL=estilos.css.map */

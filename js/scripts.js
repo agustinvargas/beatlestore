@@ -42,23 +42,24 @@ console.log(productos)
 let carrito = [];
 
 // DOM: AGREGO LOS PRODUCTOS DEL ARRAY A LA TIENDA
-
-productos.forEach(producto => {
-    const productosContenedor = document.createElement("div");
-    productosContenedor.setAttribute("class", "producto");
-    productosContenedor.innerHTML = `
+function Ordenar() {
+    productos.forEach(producto => {
+        const productosContenedor = document.createElement("div");
+        productosContenedor.setAttribute("class", "producto");
+        productosContenedor.innerHTML = `
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
-    <span class="producto__precio">$${producto.precio}</span>
+    <span class="producto__precio">${producto.precio}</span>
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
     `;
-    const tienda = document.querySelector(".tienda")
-    tienda.appendChild(productosContenedor);
-    console.log(productosContenedor);
-});
-
+        const tienda = document.querySelector(".tienda")
+        tienda.appendChild(productosContenedor);
+        console.log(productosContenedor);
+    });
+    AgregarCarrito()
+} Ordenar()
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
 const buscador = document.querySelector(".buscador__input")
 buscador.addEventListener("keyup", (e) => {
@@ -76,69 +77,156 @@ buscador.addEventListener("keyup", (e) => {
     }
 })
 
-// AL TOCAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK
-const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
-for (const boton of btnAgregarCarrito) {
-    boton.addEventListener('click', (event) => {
-        const botonClickeado = event.target;
-        console.log(botonClickeado.id);
-        let productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
+// FLTRAR PRODUCTO POR FORMATO
+// Filtrar por CD
+const filtroCD = document.querySelector("#filtro-cd")
+filtroCD.addEventListener("click", (e) => {
+    const filtro = e.target.value.toUpperCase();
+    const productosVenta = document.querySelectorAll(".producto")
 
-        if (productoAgregado.stock > 0) {
-            // alert(`Agregó el producto ${productoAgregado.titulo}`);
-            swal({
-                // title: "Good job!",
-                text: `Agregaste el producto ${productoAgregado.titulo}`,
-                icon: "success",
-            });
+    for (producto of productosVenta) {
 
-            --productoAgregado.stock;
-
-            let id = `producto__stock${productoAgregado.id}`
-            let span = document.createElement("span");
-            span.setAttribute("id", id);
-
-            let productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
-            span.appendChild(productoAgregadoStock);
-
-            let padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
-            let hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
-
-            padreEtiqueta.replaceChild(span, hijoEtiqueta);
-
-            carrito.unshift(productoAgregado);
-
-
-            localS()
-            let pRecientes = document.getElementById("recientes");
-            pRecientes.style.display = "none";
-
-            // // const guardarLocal = (clave, valor) => { localStorage.setItem(clave, valor) };
-            // // for (const producto of carrito) {
-            // //     guardarLocal(producto.id, JSON.stringify(producto));
-            // // }
-
+        const formato = producto.children[3];
+        const formatoCoincidir = formato.textContent;
+        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
+            producto.style.display = "flex";
         } else {
-            // alert("No queda stock de este producto")
-            swal({
-                title: "Ups!",
-                text: "No quedan unidades disponibles de este producto",
-                icon: "error",
-            });
+            producto.style.display = "none";
         }
+    }
+})
+// Filtrar por vinilo
+const filtroVinilo = document.querySelector("#filtro-vinilo")
+filtroVinilo.addEventListener("click", (e) => {
+    const filtro = e.target.value.toUpperCase();
+    const productosVenta = document.querySelectorAll(".producto")
+
+    for (producto of productosVenta) {
+        const formato = producto.children[3];
+        const formatoCoincidir = formato.textContent;
+        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
+            producto.style.display = "flex";
+        } else {
+            producto.style.display = "none";
+        }
+    }
+})
+
+// FILTRAR POR PRECIO
+const filtroPrecio = document.querySelector("#precio")
+filtroPrecio.addEventListener("input", (e) => {
+    const filtro = parseInt(e.target.value);
+    const productosVenta = document.querySelectorAll(".producto")
+    console.log(filtro)
+    for (producto of productosVenta) {
+
+        const precio = producto.children[2];
+        const precioCoincidir = parseInt(precio.textContent);
+        console.log(precioCoincidir)
+
+        if (precioCoincidir < filtro) {
+            producto.style.display = "flex";
+        } else {
+            producto.style.display = "none";
+        }
+        const precioParcial = document.getElementById("filtro-precio")
+        precioParcial.innerHTML = `$${filtro}`
+    }
+})
+
+// ORDENAR POR AÑO
+// Ordenar de más nuevo a más antiguo
+const ordenAscendente = document.querySelector("#filtro-año-reciente")
+ordenAscendente.addEventListener("click", (e) => {
+
+    productos.sort(function (a, b) {
+        if (a.año > b.año) {
+            return -1;
+        }
+        if (a.año < b.año) {
+            return 1;
+        }
+        return 0;
     })
-}
+    var elementos = document.getElementsByClassName("producto");
+    while (elementos.length > 0) {
+        elementos[0].parentNode.removeChild(elementos[0]);
+    }
+    Ordenar();
+})
+// Ordenar de más antiguo a más nuevo
+const ordenDescendente = document.querySelector("#filtro-año-antiguo")
+ordenDescendente.addEventListener("click", (e) => {
 
+    productos.sort(function (a, b) {
+        if (a.año < b.año) {
+            return -1;
+        }
+        if (a.año > b.año) {
+            return 1;
+        }
+        return 0;
+    })
+    let elementos = document.getElementsByClassName("producto");
+    while (elementos.length > 0) {
+        elementos[0].parentNode.removeChild(elementos[0]);
+    }
+    Ordenar();
+})
+
+
+// AL CLICKEAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO Y SE LE RESTA UNO AL STOCK
+function AgregarCarrito() {
+    const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
+    for (const boton of btnAgregarCarrito) {
+        boton.addEventListener('click', (event) => {
+            const botonClickeado = event.target;
+            console.log(botonClickeado.id);
+            let productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
+
+            if (productoAgregado.stock > 0) {
+                // Llama a la librería Sweat Alert
+                swal({
+                    text: `Agregaste el producto ${productoAgregado.titulo}`,
+                    icon: "success",
+                });
+
+                // Descuenta uno del stock del producto
+                --productoAgregado.stock;
+
+                let id = `producto__stock${productoAgregado.id}`
+                let span = document.createElement("span");
+                span.setAttribute("id", id);
+
+                let productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
+                span.appendChild(productoAgregadoStock);
+
+                let padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
+                let hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
+
+                padreEtiqueta.replaceChild(span, hijoEtiqueta);
+
+                carrito.unshift(productoAgregado);
+
+                // Guarda en el Local Storage
+                localS()
+
+                // Si se agrega productos al carrito, se remueve la sección AGREGADOS POR ULTIMA VEZ
+                let pRecientes = document.getElementById("recientes");
+                pRecientes.style.display = "none";
+
+            } else {
+                // Llama a la librería Sweat Alert
+                swal({
+                    title: "Ups!",
+                    text: "No quedan unidades disponibles de este producto",
+                    icon: "error",
+                });
+            }
+        })
+    }
+}
 // AGREGAR CARRITO A LOCAL STORAGE Y MOSTRAR CANTIDAD DE ELEMENTOS AGREGADOS ARRIBA DEL BOTON DEL CARRITO
-let carritoNum = document.getElementById("carrito__numero");
-if (carrito.length == 0) {
-    carritoNum.style.display = "none"
-} else {
-    carritoNum.innerHTML = carrito.length;
-}
-
-
-
 function localS() {
     localStorage.setItem("carrito", JSON.stringify(carrito));
     JSON.parse(localStorage.getItem("carrito"));
@@ -146,28 +234,27 @@ function localS() {
     carritoNum.style.display = "inherit"
     carritoNum.innerHTML = carrito.length;
     console.log(carrito.length)
+}
 
+let carritoNum = document.getElementById("carrito__numero");
+if (carrito.length == 0) {
+    carritoNum.style.display = "none"
+} else {
+    carritoNum.innerHTML = carrito.length;
 }
 
 // MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
-if (localStorage.getItem("carrito") === null || localStorage.hasOwnProperty('carrito') === false) {
-    let pRecientes = document.getElementById("recientes");
-    pRecientes.style.display = "none";
-}
+let productosDelLs = JSON.parse(localStorage.getItem("carrito"));
 
-// cambiar a singular si en el storage hay un solo producto
-if (JSON.parse(localStorage.getItem("carrito")) != null && JSON.parse(localStorage.getItem("carrito").length === 1)) {
-    let pRecientes = document.querySelector(".recientes__titulo");
-    pRecientes.textContent = "Producto agregado por última vez";
-}
+if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false) {
+    let ultimosProductosAgregados = document.getElementById("recientes");
+    ultimosProductosAgregados.style.display = "none";
+} else if (productosDelLs.length > 0)
+    productosDelLs.forEach(producto => {
 
-
-var productosDelLs = JSON.parse(localStorage.getItem("carrito"));
-console.log(productosDelLs);
-productosDelLs.forEach(producto => {
-    const div = document.createElement("div");
-    div.setAttribute("class", "recientes__producto");
-    div.innerHTML = `
+        const div = document.createElement("div");
+        div.setAttribute("class", "recientes__producto");
+        div.innerHTML = `
    
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
@@ -175,12 +262,17 @@ productosDelLs.forEach(producto => {
     <span class="producto__formato">${producto.formato}</span>
     
     `;
-    const recientes = document.querySelector("#recientes__productos")
-    recientes.appendChild(div);
-});
+        const recientes = document.querySelector("#recientes__productos")
+        recientes.appendChild(div);
 
+        // Cambia el contenido del encabezado, de prural (por defecto en el HTML) a singular si en el storage hay un solo producto
+        if (productosDelLs.length == 1) {
+            let ultimosProductosAgregados = document.querySelector(".recientes__titulo");
+            ultimosProductosAgregados.textContent = "Producto agregado por última vez";
+        }
+    });
 
-// AL HACER CLIC EN COMPRAR (EN SECCION RECIENTES --SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
+// AL HACER CLIC EN COMPRAR (EN SECCION AGREGADOS POR ULTIMA VEZ -SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
 const btnComprarProductosLS = document.querySelector(".recientes__comprar");
 btnComprarProductosLS.addEventListener('click', (evento) => {
 
@@ -189,12 +281,12 @@ btnComprarProductosLS.addEventListener('click', (evento) => {
         for (let producto of carritoLs) {
             const div = document.createElement("div");
             div.setAttribute("id", "productoLocalModal")
-            div.innerHTML = `<b>${producto.titulo}</b> en ${producto.formato} ($${producto.precio})`;
+            div.innerHTML = `<b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})`;
             const modalProductosLocalStorage = document.querySelector("#modal__productosLocalStorage");
             modalProductosLocalStorage.appendChild(div)
         }
     }
-    // AL HACAER CLICK EN EL BOTON "QUITAR", SE REMUEVEN LOS PRODUCTOS DEL LOCAL STORAGE Y SE REMUEVE EN EL HTML LA SECCION "PRODUCTOS AGREGADOS POR ULTIMA VEZ"
+    // AL HACER CLICK EN EL BOTON "QUITAR", SE REMUEVEN LOS PRODUCTOS DEL LOCAL STORAGE Y SE REMUEVE EN EL HTML LA SECCION "PRODUCTOS AGREGADOS POR ULTIMA VEZ"
     const btnQuitarProductosLS = document.querySelector("#modal__quitarProductosLS");
     btnQuitarProductosLS.addEventListener('click', (evento) => {
         localStorage.getItem("carrito")
@@ -204,43 +296,3 @@ btnComprarProductosLS.addEventListener('click', (evento) => {
         recientes.parentElement.removeChild(recientes)
     })
 })
-
-
-
-
-
-// const filtroPrecio = document.querySelector(".ordenarPrecio");
-// filtroPrecio.onclick = () => {ordenarPorPrecio()}
-
-// function ordenarPorPrecio() {
-//     const precios = document.querySelector(".producto__precio");
-//     for (precio of precios) {
-
-//     }
-//     productos.sort(function (a, b) {
-//         return a.precio - b.precio;
-//     });
-//     // let tiendaR = document.querySelector(".producto");
-//     // tiendaR.parentNode.removeChild(tiendaR);
-//     // document.querySelector(".tienda").appendChild(tiendaR)
-//     // productos.forEach(producto => {
-//     //     const productosContenedor = document.createElement("div");
-//     //     productosContenedor.setAttribute("class", "producto");
-//     //     productosContenedor.innerHTML = `
-//     //     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
-//     //     <h2 class="producto__album">${producto.titulo}</h2>
-//     //     <span class="producto__precio">$${producto.precio}</span>
-//     //     <span class="producto__formato">${producto.formato}<span class="producto__año">${producto.año}</span></span>
-//     //     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
-//     //     `;
-//     //     const tienda = document.querySelector(".tienda")
-//     //     tienda.appendChild(productosContenedor);
-//     //     console.log(productosContenedor);
-
-
-//     // });
-
-
-
-//     console.log(productos);
-// }  
