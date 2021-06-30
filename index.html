@@ -84,25 +84,26 @@
                 <h2 class="filtros__titulo">| Filtrar búsqueda</h2>
                 <!-- Ordenar por formato -->
                 <form class="filtros__formato" action="">
-                    <input class="filtros__formato__input" type="radio" name="formato" id="filtro-cd" value="cd">
+                    <input class="filtros__formato__input" type="radio" checked="checked" name="filtros"
+                        id="filtro-todos-formatos" value="cd">
+                    <label for="CD">Todos</label><br>
+                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-cd" value="cd">
                     <label for="CD">Disco compacto (CD)</label><br>
-                    <input class="filtros__formato__input" type="radio" name="formato" id="filtro-vinilo" value="vinilo">
-                    <label for="vinilo">Vinilo</label>
-                   
-                </form>
-                <!-- Ordenar por precio -->
-                <hr>
-                <form class="filtros__formato" action="">
-                    <label for="precio">Precio inferior a <span id="filtro-precio">$4000</span></label>
-                    <input type="range" id="precio" name="precio" min="1000" max="4000" value="4000">
-                </form>
-                <!-- Ordenar por año -->
-                <form class="filtros__formato" action="">
-                    <input class="filtros__formato__input" type="radio" name="año" id="filtro-año-reciente" value="reciente">
+                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-vinilo"
+                        value="vinilo">
+                    <label for="vinilo">Vinilo</label><br>
+
+                    <!-- Ordenar por año -->
+                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-año-reciente"
+                        value="reciente">
                     <label for="reciente">Más recientes primero</label><br>
-                    <input class="filtros__formato__input" type="radio" name="año" id="filtro-año-antiguo" value="antiguo">
-                    <label for="antiguo">Más antiguos primero</label>
-                   
+                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-año-antiguo"
+                        value="antiguo">
+                    <label for="antiguo">Más antiguos primero</label><br><br>
+
+                    <!-- Ordenar por precio -->
+                    <label for="precio">Precio inferior a <span id="filtro-precio">$3500</span></label><br>
+                    <input type="range" id="precio" name="precio" min="1000" max="3500" value="3500">
                 </form>
             </div>
         </aside>
@@ -117,6 +118,9 @@
             <span>ACA VA INFO API DE DEEZER</span>
         </div>
     </section>
+
+    <!-- JavaScript JQuery
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
 
     <!-- JavaScript Bundle with Popper (Bootstrap) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

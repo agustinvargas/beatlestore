@@ -24,7 +24,7 @@ class Producto {
     //     }
     // };
     sumarIva() {
-        this.precio = parseFloat((this.precio * 1.21).toFixed(2));
+        return this.precio = parseFloat((this.precio * 1.21).toFixed(2));
     }
 }
 
@@ -70,7 +70,9 @@ buscador.addEventListener("keyup", (e) => {
         const titulo = producto.children[1];
         const tituloCoincidir = titulo.textContent;
         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-            producto.style.display = "flex";
+            if (producto.style.display != "none") {
+                producto.style.display = "flex";
+            }
         } else {
             producto.style.display = "none";
         }
@@ -88,8 +90,10 @@ filtroCD.addEventListener("click", (e) => {
 
         const formato = producto.children[3];
         const formatoCoincidir = formato.textContent;
-        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
+        if (formatoCoincidir.toUpperCase().includes(filtro)) {
+
             producto.style.display = "flex";
+
         } else {
             producto.style.display = "none";
         }
@@ -105,12 +109,22 @@ filtroVinilo.addEventListener("click", (e) => {
         const formato = producto.children[3];
         const formatoCoincidir = formato.textContent;
         if ((formatoCoincidir.toUpperCase().includes(filtro))) {
+
             producto.style.display = "flex";
+
         } else {
             producto.style.display = "none";
         }
     }
 })
+// Mostrar todos los productos
+const filtroTodosFormatos = document.querySelector("#filtro-todos-formatos")
+filtroTodosFormatos.addEventListener("click", (e) => {
+    const elementos = document.getElementsByClassName("producto");
+    while (elementos.length > 0) {
+        elementos[0].parentNode.removeChild(elementos[0]);
+    }
+    Ordenar();})
 
 // FILTRAR POR PRECIO
 const filtroPrecio = document.querySelector("#precio")
@@ -148,7 +162,7 @@ ordenAscendente.addEventListener("click", (e) => {
         }
         return 0;
     })
-    var elementos = document.getElementsByClassName("producto");
+    const elementos = document.getElementsByClassName("producto");
     while (elementos.length > 0) {
         elementos[0].parentNode.removeChild(elementos[0]);
     }
@@ -281,7 +295,10 @@ btnComprarProductosLS.addEventListener('click', (evento) => {
         for (let producto of carritoLs) {
             const div = document.createElement("div");
             div.setAttribute("id", "productoLocalModal")
-            div.innerHTML = `<b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})`;
+            div.innerHTML = `
+            <b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})
+            `;
+            
             const modalProductosLocalStorage = document.querySelector("#modal__productosLocalStorage");
             modalProductosLocalStorage.appendChild(div)
         }
