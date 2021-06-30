@@ -303,7 +303,6 @@ btnComprarProductosLS.addEventListener('click', () => {
         recientes.parentElement.removeChild(recientes)
     })
 })
-
 // FUNCION PARA BORRAR LOS ELEMENTOS DE INICIO DE LA TIENDA Y ACTUALIZARLOS VOLVIENDOLOS A IMPRIMIR
 function actualizaTienda(){
     const elementos = document.getElementsByClassName("producto");
