@@ -28,113 +28,99 @@ class Producto {
     }
 }
 
-let productos = [];
-productos.push(
+let productos = [
     new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 2),
     new Producto(2, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
     new Producto(3, "img/with-the-beatles-cd.png", "With the Beatles", 990, "CD", 1963, 6),
     new Producto(4, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
     new Producto(5, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
     new Producto(6, "img/abbey-road-cd.png", "Abbey Road", 1290, "CD", 1969, 7),
-);
-console.log(productos)
+];
+
+console.log(`Productos en venta: `, productos)
 
 let carrito = [];
 
 // DOM: AGREGO LOS PRODUCTOS DEL ARRAY A LA TIENDA
-function producosTienda() {
+function productosTienda() {
     productos.forEach(producto => {
-        const productosContenedor = document.createElement("div");
-        productosContenedor.setAttribute("class", "producto");
-        productosContenedor.innerHTML = `
+        const productosContenedor = $("<div></div>");
+        $(productosContenedor).attr("class", "producto");
+        $(productosContenedor).html(`
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
     <span class="producto__precio">${producto.precio}</span>
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
-    `;
-        const tienda = document.querySelector(".tienda")
-        tienda.appendChild(productosContenedor);
-        console.log(productosContenedor);
+    `);
+        $(".tienda").append($(productosContenedor));
     });
     AgregarCarrito()
-} producosTienda() 
+} productosTienda()
 
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
-const buscador = document.querySelector(".buscador__input")
-buscador.addEventListener("keyup", (e) => {
+$(".buscador__input").keyup((e) => {
     const busqueda = e.target.value.toUpperCase();
-    const productosVenta = document.querySelectorAll(".producto")
-
-    for (producto of productosVenta) {
+    for (producto of $(".producto")) {
         const titulo = producto.children[1];
         const tituloCoincidir = titulo.textContent;
+
         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-            // if (producto.style.display != "none") {
-                producto.style.display = "flex";
-            // }
+
+            $(producto).css("display", "flex");
+
+
         } else {
-            producto.style.display = "none";
+            $(producto).css("display", "none");
         }
     }
 })
 
 // FLTRAR PRODUCTO POR FORMATO
-// Filtrar por CD
-const filtroCD = document.querySelector("#filtro-cd")
-filtroCD.addEventListener("click", (e) => {
+$("#filtro-cd").click((e) => {
+    actualizaTienda()
     const filtro = e.target.value.toUpperCase();
-    const productosVenta = document.querySelectorAll(".producto")
-
-    for (producto of productosVenta) {
-        const formato = producto.children[3];
-        const formatoCoincidir = formato.textContent;
-        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
-
-            producto.style.display = "flex";
-
+    for (producto of $(".producto")) {
+        const formatoCoincidir = producto.children[3].textContent;
+        if (formatoCoincidir.toUpperCase().includes(filtro)) {
+            if (producto.style.display != "none") {
+                $(producto).css("display", "flex");
+            }
         } else {
-            producto.style.display = "none";
+            $(producto).css("display", "none");
         }
     }
 })
-// Filtrar por vinilo
-const filtroVinilo = document.querySelector("#filtro-vinilo")
-filtroVinilo.addEventListener("click", (e) => {
-    const filtro = e.target.value.toUpperCase();
-    const productosVenta = document.querySelectorAll(".producto")
 
-    for (producto of productosVenta) {
+// Filtrar por vinilo
+$("#filtro-vinilo").click((e) => {
+    actualizaTienda()
+    const filtro = e.target.value.toUpperCase();
+    for (producto of $(".producto")) {
         const formato = producto.children[3];
         const formatoCoincidir = formato.textContent;
         if ((formatoCoincidir.toUpperCase().includes(filtro))) {
-
-            producto.style.display = "flex";
-
+            if (producto.style.display != "none") {
+                $(producto).css("display", "flex");
+            }
         } else {
-            producto.style.display = "none";
+            $(producto).css("display", "none");
         }
     }
 })
 // Mostrar todos los productos
-const filtroTodosFormatos = document.querySelector("#filtro-todos-formatos")
-filtroTodosFormatos.addEventListener("click", (e) => {
+const filtroTodosFormatos = $("#filtro-todos-formatos")
+filtroTodosFormatos.click(() => {
     actualizaTienda()
 })
 
 // FILTRAR POR PRECIO
-const filtroPrecio = document.querySelector("#precio")
-filtroPrecio.addEventListener("input", (e) => {
+$("#precio").on("input", (e) => {
     const filtro = parseInt(e.target.value);
-    const productosVenta = document.querySelectorAll(".producto")
-    console.log(filtro)
-    for (producto of productosVenta) {
-
+    for (producto of $(".producto")) {
         const precio = producto.children[2];
         const precioCoincidir = parseInt(precio.textContent);
-        console.log(precioCoincidir)
-
         if (precioCoincidir < filtro) {
             producto.style.display = "flex";
         } else {
@@ -145,10 +131,10 @@ filtroPrecio.addEventListener("input", (e) => {
     }
 })
 
+
 // ORDENAR POR AÑO
 // Ordenar de más nuevo a más antiguo
-const ordenAscendente = document.querySelector("#filtro-año-reciente")
-ordenAscendente.addEventListener("click", (e) => {
+$("#filtro-año-reciente").click(() => {
 
     productos.sort(function (a, b) {
         if (a.año > b.año) {
@@ -162,8 +148,7 @@ ordenAscendente.addEventListener("click", (e) => {
     actualizaTienda()
 })
 // Ordenar de más antiguo a más nuevo
-const ordenDescendente = document.querySelector("#filtro-año-antiguo")
-ordenDescendente.addEventListener("click", (e) => {
+$("#filtro-año-antiguo").click(() => {
 
     productos.sort(function (a, b) {
         if (a.año < b.año) {
@@ -288,7 +273,7 @@ btnComprarProductosLS.addEventListener('click', () => {
             div.innerHTML = `
             <b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})
             `;
-            
+            console.log(producto)
             const modalProductosLocalStorage = document.querySelector("#modal__productosLocalStorage");
             modalProductosLocalStorage.appendChild(div)
         }
@@ -304,10 +289,9 @@ btnComprarProductosLS.addEventListener('click', () => {
     })
 })
 // FUNCION PARA BORRAR LOS ELEMENTOS DE INICIO DE LA TIENDA Y ACTUALIZARLOS VOLVIENDOLOS A IMPRIMIR
-function actualizaTienda(){
-    const elementos = document.getElementsByClassName("producto");
-    while (elementos.length > 0) {
-        elementos[0].parentNode.removeChild(elementos[0]);
+function actualizaTienda() {
+    while ($(".producto").length > 0) {
+        $(".producto")[0].parentNode.removeChild($(".producto")[0]);
     }
-    producosTienda();
+    productosTienda();
 }
