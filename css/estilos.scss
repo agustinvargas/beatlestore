@@ -138,7 +138,7 @@ p,
 
 // tienda
 
-.tienda {
+.tienda{
     // grid-area: 3 / 1 / 4 / 2;
     grid-area: tienda;
 }
@@ -309,6 +309,11 @@ p,
         grid-gap: 50px;
     }
 
+    .remeras {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 50px;
+    }
     .producto {
         max-width: 100%;
         margin: auto;

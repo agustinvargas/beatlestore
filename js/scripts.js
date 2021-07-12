@@ -53,11 +53,50 @@ function productosTienda() {
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
+    <button onclick="wsp('${producto.formato}', '${producto.titulo.replace("'", "´")}')" class="agregar-carrito">Consultar WhatsApp</button>
     `);
-        $(".tienda").append($(productosContenedor));
+        $(".tienda").prepend($(productosContenedor));
     });
     AgregarCarrito()
 } productosTienda()
+
+function wsp(formato, titulo) {
+    window.open(`https://api.whatsapp.com/send?phone=34123456789&text=MENSAJE FICTICIO: Hola, estoy interesado en comprar el ${formato.toLowerCase()} ${titulo.replace("´", "'")}`, '_blank')
+}
+
+// MODAL CUPON ANIMADO
+//Crea un popup donde se informa un cupón de descuento
+$("html").append(`
+<div class="modal modal-cupon" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header modal-cupon__header">
+      <h5 class="modal-title">Solo por hoy</h5>
+    </div>
+    <div class="modal-body">
+      <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené un 20% OFF</p>
+    </div>
+  </div>
+</div>
+</div>
+`)
+$("body").animate({
+    opacity: '0.2'
+    //oscurece el fondo para darle mayor importancia al popup
+},
+    "slow",
+    // El popup aparece y desaparece solo
+    () => {
+        $(".modal-cupon")
+            .fadeIn(1000)
+            .delay(4000)
+            .fadeOut(1000, () => {
+                $("body").animate({
+                    opacity: '1'
+                }, "slow")
+                //vuelve a mostrar el body normal
+            });
+    })
 
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
 $(".buscador__input").keyup((e) => {
@@ -65,21 +104,16 @@ $(".buscador__input").keyup((e) => {
     for (producto of $(".producto")) {
         const titulo = producto.children[1];
         const tituloCoincidir = titulo.textContent;
-
         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-
-            $(producto).css("display", "flex");
-
-
+            $(producto).fadeIn();
         } else {
-            $(producto).css("display", "none");
+            $(producto).fadeOut(1000);
         }
     }
 })
 
 // FLTRAR PRODUCTO POR FORMATO
 $("#filtro-cd").click((e) => {
-    actualizaTienda()
     const filtro = e.target.value.toUpperCase();
     for (producto of $(".producto")) {
         const formatoCoincidir = producto.children[3].textContent;
@@ -95,7 +129,6 @@ $("#filtro-cd").click((e) => {
 
 // Filtrar por vinilo
 $("#filtro-vinilo").click((e) => {
-    actualizaTienda()
     const filtro = e.target.value.toUpperCase();
     for (producto of $(".producto")) {
         const formato = producto.children[3];
@@ -202,6 +235,27 @@ function AgregarCarrito() {
                 // Si se agrega productos al carrito, se remueve la sección AGREGADOS POR ULTIMA VEZ
                 let pRecientes = document.getElementById("recientes");
                 pRecientes.style.display = "none";
+
+                // ANIMACIÓN: LLEVA HASTA ARRIBA DE LA PANTALLA, MUEVE EL BOTÓN DEL CARRITO Y LO VUELVE A SU ESTADO ORIGINAL
+                $('html, body').animate({
+                    scrollTop: $("body").offset().top
+                    //scrollea hasta arriba de todo
+                }, 100,
+                    () => {
+                        $("#carrito").animate({
+                            marginBottom: "+=4px"
+                            //sube el carrito
+                        }, 400,
+                            () => {
+                                $("#carrito").animate({
+                                    marginBottom: "-=4px"
+                                }, 200
+                                //baja el carrito hasta su estado original
+                                )
+                            }
+                        )
+                    }
+                );
 
             } else {
                 // Llama a la librería Sweat Alert
