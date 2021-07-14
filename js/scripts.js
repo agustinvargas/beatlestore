@@ -36,7 +36,7 @@ function productosTienda() {
         $(productosContenedor).html(`
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
-    <span class="producto__precio">${producto.precio}</span>
+    <span>$<span class="producto__precio">${producto.precio}</span></span>
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <button id="${producto.id}" class="agregar-carrito">Agregar</button>
@@ -386,7 +386,7 @@ filtroTodosFormatos.click(() => {
 $("#precio").on("input", (e) => {
     const filtro = parseInt(e.target.value);
     for (producto of $(".producto")) {
-        const precio = producto.children[2];
+        const precio = producto.children[2].children[0];
         const precioCoincidir = parseInt(precio.textContent);
         if (precioCoincidir < filtro) {
             producto.style.display = "flex";
