@@ -28,13 +28,49 @@
                 </ul>
                 <ul>
                     <li id="carrito">
-                        <img class="carrito__img" src="img\carrito.png" alt="Carrito">
+                        <img class="carrito__img" data-bs-toggle="modal" data-bs-target="#exampleModal" src="img\carrito.png" alt="Carrito">
                         <span id="carrito__numero"></span>
                     </li>
                 </ul>
             </nav>
         </header>
+        <!-- Modal asociado al botón del carrito-->
+        <!-- <div class="modal fade" id="modal__carrito" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Carrito
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="modal__btn-carrito" class="modal-body"></div>
+                    <div class="modal-footer">
 
+                        <button type="button" class="btn btn-primary">Finalizar compra</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Carrito</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal__btn-carrito">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Finalizar compra</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--  Buscador -->
         <div id="buscador">
             <input class="buscador__input" type="text" placeholder="Buscá un álbum">
@@ -53,7 +89,7 @@
                 <div id="recientes__productos"></div>
             </div>
 
-            <!-- Modal -->
+            <!-- Modal asociado a productos del Local Storage-->
             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -75,9 +111,16 @@
 
             <!-- productos a la venta -->
             <div class="tienda"></div>
-            <div class="remeras"></div>
-           
+            <!-- <div class="remeras"></div> -->
 
+            <!-- productos de mercado libre -->
+            <div id="meli">
+                <div class="recientes__encabezado">
+                    <h3 class="recientes__titulo">Remeras</h3>
+                    <img src="img/mercado-libre-logo.png" alt="Logo Mercado Libre" class="meli__logo">
+                </div>
+                <div id="meli__producto"></div>
+            </div>
         </section>
 
         <!--  Filtros de búsqueda -->
@@ -112,17 +155,18 @@
 
     </div>
     <section class="plataformas">
-        <div class="plataformas__spotify">
+        <!-- <div class="plataformas__spotify">
             <span>ACA VA INFO DE API DE SPOTIFY</span>
         </div>
 
         <div class="plataformas__deezer">
             <span>ACA VA INFO API DE DEEZER</span>
-        </div>
+        </div> -->
     </section>
-    
+
     <!-- JavaScript JQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
     <!-- JavaScript Bundle with Popper (Bootstrap) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

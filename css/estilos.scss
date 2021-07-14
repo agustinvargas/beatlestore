@@ -123,6 +123,18 @@ p,
     transform: skew(5deg);
 }
 
+.btn-wasap {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 12.5%;
+    transform: translate(40%, -40%);
+    &:hover {
+        transform: translate(37%, -37%);
+    }
+}
+
 // input del buscador
 .buscador__input {
     // grid-area: 2 / 1 / 3 / 3;
@@ -138,7 +150,7 @@ p,
 
 // tienda
 
-.tienda{
+.tienda {
     // grid-area: 3 / 1 / 4 / 2;
     grid-area: tienda;
 }
@@ -146,6 +158,26 @@ p,
     // grid-area: recientes;
     display: grid;
     margin-bottom: 15%;
+}
+
+#meli {
+    @extend #recientes;
+    margin-top: 15%;
+}
+
+.meli__producto {
+    @extend .producto;
+    margin: 25px 20px 35px 20px !important;
+    min-width: 15em;
+    /* max-width: 200px !important; */
+}
+
+.producto.meli__producto{
+    background-color: white;
+}
+
+.meli__logo{
+    max-width: 25%;
 }
 
 .recientes__encabezado {
@@ -182,6 +214,10 @@ p,
     }
 }
 
+#meli__producto {
+    @extend #recientes__productos;
+}
+
 .recientes__producto {
     @extend .producto;
     margin: 25px 20px 35px 20px !important;
@@ -200,6 +236,7 @@ p,
     align-items: center;
     max-width: 80%;
     margin: 25px auto;
+    position: relative;
 }
 
 .producto:hover {
