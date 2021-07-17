@@ -73,7 +73,7 @@
         </div>
         <!--  Buscador -->
         <div id="buscador">
-            <input class="buscador__input" type="text" placeholder="Buscá un álbum">
+            <input class="buscador__input" id="buscador__input" type="text" placeholder="Buscá un álbum">
         </div>
 
 
@@ -128,14 +128,17 @@
             <div class="filtros">
                 <h2 class="filtros__titulo">| Filtrar búsqueda</h2>
                 <!-- Ordenar por formato -->
+
+
+
                 <form class="filtros__formato" action="">
                     <input class="filtros__formato__input" type="radio" checked="checked" name="filtros"
-                        id="filtro-todos-formatos" value="cd">
-                    <label for="CD">Todos</label><br>
-                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-cd" value="cd">
+                        id="filtro-todos-formatos" value="todos" data-filter="all">
+                    <label for="todos">Todos</label><br>
+                    <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-cd" value="cd" data-filter="cd">
                     <label for="CD">Disco compacto (CD)</label><br>
                     <input class="filtros__formato__input" type="radio" name="filtros" id="filtro-vinilo"
-                        value="vinilo">
+                        value="vinilo" data-filter="vinilo">
                     <label for="vinilo">Vinilo</label><br>
 
                     <!-- Ordenar por año -->

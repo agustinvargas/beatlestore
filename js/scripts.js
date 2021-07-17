@@ -1,5 +1,9 @@
 //CREA OBJETOS, ARRAY DE PRODUCTOS
 
+function probando(parametro) {
+    parametro == true
+}
+
 class Producto {
     constructor(id, img, titulo, precio, formato, año, stock) {
         this.id = id;
@@ -31,8 +35,10 @@ let carrito = [];
 // DOM: AGREGO/PINTO LOS PRODUCTOS DEL ARRAY A LA TIENDA
 function productosTienda() {
     productos.forEach(producto => {
-        const productosContenedor = $("<div></div>");
-        $(productosContenedor).attr("class", "producto");
+        const productosContenedor = $(`<div class="producto ${producto.formato.toLowerCase()}"></div>`);
+        // $(productosContenedor).attr("class", "producto");
+        // $(productosContenedor).attr(`"class", "${producto.formato}"`);
+
         $(productosContenedor).html(`
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
@@ -80,7 +86,7 @@ function mercadolibreApi() {
             div.innerHTML = `
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
-    <span class="producto__precio">${producto.precio}</span>
+    <span>$<span class="producto__precio">${producto.precio}</span></span>
     <button class="agregar-carrito"><a href="${producto.link}">Ver en Mercado Libre</a></button>
     `;
             const recientes = document.querySelector("#meli__producto")
@@ -303,100 +309,202 @@ $("html").append(`
 </div>
 </div>
 `)
-$("body").animate({
-    opacity: '0.2'
-    //oscurece el fondo para darle mayor importancia al popup
-},
-    "slow",
-    // El popup aparece y desaparece solo
-    () => {
-        $(".modal-cupon")
-            .fadeIn(1000)
-            .delay(2500)
-            .fadeOut(1000, () => {
-                $("body").animate({
-                    opacity: '1'
-                }, "slow")
-                //vuelve a mostrar el body normal
-            });
-    })
+// $("body").animate({
+//     opacity: '0.2'
+//     //oscurece el fondo para darle mayor importancia al popup
+// },
+//     "slow",
+//     // El popup aparece y desaparece solo
+//     () => {
+//         $(".modal-cupon")
+//             .fadeIn(1000)
+//             .delay(2500)
+//             .fadeOut(1000, () => {
+//                 $("body").animate({
+//                     opacity: '1'
+//                 }, "slow")
+//                 //vuelve a mostrar el body normal
+//             });
+//     })
 
 
 // FILTROS
 // AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
-$(".buscador__input").keyup((e) => {
-    const busqueda = e.target.value.toUpperCase();
-    for (producto of $(".producto")) {
-        const titulo = producto.children[1];
-        const tituloCoincidir = titulo.textContent;
-        if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-            $(producto).fadeIn();
-        } else {
-            $(producto).fadeOut(1000);
-        }
-    }
-})
 
-// FLTRAR PRODUCTO POR FORMATO
-$("#filtro-cd").click((e) => {
-    actualizaTienda()
-    const filtro = e.target.value.toUpperCase();
+// Función para mostrar todos los productos
+const displayFlex = () => {
     for (producto of $(".producto")) {
-        const formatoCoincidir = producto.children[3].textContent;
-        if (formatoCoincidir.toUpperCase().includes(filtro)) {
-            if (producto.style.display != "none") {
-                $(producto).css("display", "flex");
-            }
-        } else {
-            $(producto).css("display", "none");
-        }
+        $(producto).css("display", "flex");
     }
-    // Oculta la sección de remeras de Mercado Libre
-    $("#meli").css("display", "none")
-})
+}
 
-// Filtrar por vinilo
-$("#filtro-vinilo").click((e) => {
-    actualizaTienda()
-    const filtro = e.target.value.toUpperCase();
-    for (producto of $(".producto")) {
-        const formato = producto.children[3];
-        const formatoCoincidir = formato.textContent;
-        if ((formatoCoincidir.toUpperCase().includes(filtro))) {
-            if (producto.style.display != "none") {
-                $(producto).css("display", "flex");
-            }
+// $(".buscador__input").keyup((e) => {
+//     const busqueda = e.target.value.toUpperCase();
+//     for (producto of $(".producto")) {
+//         const titulo = producto.children[1];
+//         const tituloCoincidir = titulo.textContent;
+//         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
+
+//             $(producto).fadeIn();
+
+//         } else {
+//             $(producto).fadeOut(1000);
+//         }
+
+//         if ((tituloCoincidir.toUpperCase().includes(busqueda)) && ($("#filtro-cd").is(':checked'))) {
+//             $(producto.children[3].textContent).fadeIn();
+//         } 
+
+
+//     }
+// })
+
+// $(".buscador__input").keyup((e) => {
+//     const busqueda = e.target.value.toUpperCase();
+//     for (producto of $(".producto")) {
+//         const titulo = producto.children[1];
+//         const tituloCoincidir = titulo.textContent;
+//         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
+
+//             $(producto).fadeIn();
+
+//         } else {
+//             $(producto).fadeOut(1000);
+//         }
+
+//         if ((tituloCoincidir.toUpperCase().includes(busqueda)) && ($("#filtro-cd").is(':checked'))) {
+//             $(producto.children[3].textContent).fadeIn();
+//         } 
+
+
+//     }
+// })
+// SEARCH FILTER
+const search = document.getElementById("buscador__input");
+const productName = document.querySelectorAll(".producto__album");
+
+// A BETTER WAY TO FILTER THROUGH THE PRODUCTS
+search.addEventListener("keyup", filterProducts);
+
+
+function filterProducts(e) {
+    const text = e.target.value.toLowerCase();
+    // console.log(productName[0]);
+    productName.forEach(function (product) {
+        const item = product.firstChild.textContent;
+        if (item.toLowerCase().indexOf(text) != -1) {
+            product.parentElement.style.display = "flex"
         } else {
-            $(producto).css("display", "none");
+            product.parentElement.style.display = "none"
         }
-    }
-    // Oculta la sección de remeras de Mercado Libre
-    $("#meli").css("display", "none")
-})
-// Mostrar todos los productos
-const filtroTodosFormatos = $("#filtro-todos-formatos")
-filtroTodosFormatos.click(() => {
-    actualizaTienda() //albums
-    // Muestra la sección de remeras de Mercado Libre por si tiene display = none
-    mercadolibreApi()
-    $("#meli").css("display", "grid")
-})
+    })
+}
+const btns = document.querySelectorAll('.filtros__formato__input');
+const storeProducts = document.querySelectorAll('.producto');
+// const search = document.getElementById(search);
+
+for (i = 0; i < btns.length; i++) {
+
+    btns[i].addEventListener('click', (e) => {
+        e.preventDefault()
+        const filter = e.target.dataset.filter;
+        console.log(filter);
+
+        storeProducts.forEach((product) => {
+
+
+            if (filter === 'all') {
+                product.style.display = 'flex'
+            } else {
+                if (product.classList.contains(filter)) {
+                   
+                        product.style.display = 'flex'
+                    
+                } else {
+                    product.style.display = 'none'
+                }
+            }
+        });
+        $("#buscador__input").val("")
+    });
+};
+
+// // FLTRAR PRODUCTO POR FORMATO
+// $("#filtro-cd").click((e) => {
+//     displayFlex();
+//     const filtro = e.target.value.toUpperCase();
+//     for (producto of $(".producto")) {
+//         const formatoCoincidir = producto.children[3].textContent;
+//         if (formatoCoincidir.toUpperCase().includes(filtro)) {
+//             if (producto.style.display != "none") {
+//                 $(producto).css("display", "flex");
+//             }
+//         } else {
+//             $(producto).css("display", "none");
+//         }
+//     }
+//     // Oculta la sección de remeras de Mercado Libre
+//     $("#meli").css("display", "none")
+// })
+
+
+// // Filtrar por vinilo
+// $("#filtro-vinilo").click((e) => {
+//     displayFlex();
+//     const filtro = e.target.value.toUpperCase();
+//     for (producto of $(".producto")) {
+//         const formato = producto.children[3];
+//         const formatoCoincidir = formato.textContent;
+//         if ((formatoCoincidir.toUpperCase().includes(filtro))) {
+//             if (producto.style.display != "none") {
+//                 $(producto).css("display", "flex");
+//             }
+//         } else {
+//             $(producto).css("display", "none");
+//         }
+//     }
+
+//     probando(filtro)
+//     // Oculta la sección de remeras de Mercado Libre
+//     $("#meli").css("display", "none")
+// })
+// // Mostrar todos los productos
+// const filtroTodosFormatos = $("#filtro-todos-formatos")
+// filtroTodosFormatos.click(() => {
+//     displayFlex() //albums
+//     // Muestra la sección de remeras de Mercado Libre por si tiene display = none
+//     $("#meli").css("display", "grid")
+// })
 
 // FILTRAR POR PRECIO
+
 $("#precio").on("input", (e) => {
+    $("#filtro-todos-formatos").prop("checked", true);
+
     const filtro = parseInt(e.target.value);
     for (producto of $(".producto")) {
         const precio = producto.children[2].children[0];
+
         const precioCoincidir = parseInt(precio.textContent);
+
         if (precioCoincidir < filtro) {
-            producto.style.display = "flex";
+
+            if (producto.style.display != "none") {
+                producto.style.display = "flex";
+            }
+
         } else {
             producto.style.display = "none";
         }
+
+
         const precioParcial = document.getElementById("filtro-precio")
         precioParcial.innerHTML = `$${filtro}`
     }
+
 })
+
+
 
 // ORDENAR POR AÑO
 // Ordenar de más nuevo a más antiguo
