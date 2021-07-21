@@ -1,9 +1,5 @@
 //CREA OBJETOS, ARRAY DE PRODUCTOS
 
-function probando(parametro) {
-    parametro == true
-}
-
 class Producto {
     constructor(id, img, titulo, precio, formato, año, stock) {
         this.id = id;
@@ -35,10 +31,8 @@ let carrito = [];
 // DOM: AGREGO/PINTO LOS PRODUCTOS DEL ARRAY A LA TIENDA
 function productosTienda() {
     productos.forEach(producto => {
-        const productosContenedor = $(`<div class="producto ${producto.formato.toLowerCase()}"></div>`);
-        // $(productosContenedor).attr("class", "producto");
-        // $(productosContenedor).attr(`"class", "${producto.formato}"`);
-
+        const productosContenedor = $("<div></div>");
+        $(productosContenedor).attr("class", "producto album");
         $(productosContenedor).html(`
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
@@ -96,6 +90,7 @@ function mercadolibreApi() {
 } mercadolibreApi()
 
 // AL CLICKEAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO (SE AGREGA AL ARRAY) Y SE LE RESTA UNO AL STOCK
+let total = 0
 function AgregarCarrito() {
     const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
     for (const boton of btnAgregarCarrito) {
@@ -127,10 +122,14 @@ function AgregarCarrito() {
                 padreEtiqueta.replaceChild(span, hijoEtiqueta);
 
                 carrito.unshift(productoAgregado);
-
+                if (carrito.length > 0) {
+                    $("#carrito").show()
+                };
                 // Guarda en el Local Storage
-                localS()
+                localS();
 
+                // Actaliza valor del carrito
+                // calcTotal();
                 // Si se agrega productos al carrito, se remueve la sección AGREGADOS POR ULTIMA VEZ
                 let pRecientes = document.getElementById("recientes");
                 if (pRecientes) {
@@ -181,17 +180,17 @@ function localS() {
 }
 
 // el número se muestra si hay elementos en el carrito
-let carritoNum = document.getElementById("carrito__numero");
-if (carrito.length == 0) {
-    carritoNum.style.display = "none"
-} else {
-    carritoNum.innerHTML = carrito.length;
-}
+// let carritoNum = document.getElementById("carrito__numero");
+// if (carrito.length == 0) {
+//     carritoNum.style.display = "none"
+// } else {
+//     carritoNum.innerHTML = carrito.length;
+// }
 
 // MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
 let productosDelLs = JSON.parse(localStorage.getItem("carrito"));
 // chequea que haya productos guardados en el LocalS
-if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false) {
+if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false || productosDelLs.length == 0) {
     let ultimosProductosAgregados = document.getElementById("recientes");
     ultimosProductosAgregados.style.display = "none";
 } else if (productosDelLs.length > 0) //si hay, los pinta en el html/dom
@@ -213,9 +212,10 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false)
     });
 
 // AL HACER CLIC EN COMPRAR (EN SECCION AGREGADOS POR ULTIMA VEZ -SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
+let carritoLs = ""
 const btnComprarProductosLS = document.querySelector(".recientes__comprar");
 btnComprarProductosLS.addEventListener('click', () => {
-    let carritoLs = JSON.parse(localStorage.getItem("carrito"));
+    carritoLs = JSON.parse(localStorage.getItem("carrito"));
     if (!document.getElementById("productoLocalModal")) {
         for (let producto of carritoLs) {
             const div = document.createElement("div");
@@ -239,60 +239,6 @@ btnComprarProductosLS.addEventListener('click', () => {
     })
 })
 
-// CLICK BOTON DEL CARRITO
-console.log(carrito)
-const btnCarrito = document.querySelector(".carrito__img");
-btnCarrito.addEventListener('click', () => {
-    console.log("Carrito: ", carrito)
-    // if (carrito.length === 0) {
-    //     $("#exampleModal").css("display", "none")
-    //     // Llama a la librería Sweat Alert
-    //     swal({
-    //         text: `Aún no tenés productos agregados`,
-    //         icon: "error",
-    //     });
-    // }
-
-    // })
-    //     console.log(carrito)
-    while ($(".carrito-prod").length > 0) {
-        $(".carrito-prod")[0].parentNode.removeChild($(".carrito-prod")[0])
-    }; //evita la duplicación de los productos
-    for (producto of carrito) {
-        const div = document.createElement("div");
-        div.setAttribute("id", "productoCarrito");
-        div.setAttribute("class", "carrito-prod")
-        div.innerHTML = `
-        <b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})
-        `;
-        console.log(producto)
-        const productoCarrito = document.querySelector("#modal__btn-carrito");
-        productoCarrito.appendChild(div)
-    }
-})
-
-// function carritoBoton(productoClikeado) {
-//     console.log(productoClikeado);
-//     const div = document.createElement("div");
-//     div.setAttribute("id", `carrito-${productoClikeado.id}`);
-
-//     div.innerHTML = `
-//         <b>${productoClikeado.titulo}</b> en ${productoClikeado.formato.toLowerCase()} ($${productoClikeado.precio})`
-
-//         //<button onclick="quitarCarrito(${productoClikeado.id})">QUITAR</button>
-//         ;
-//     const productoCarrito = document.querySelector("#modal__btn-carrito");
-//     productoCarrito.appendChild(div)
-// }
-// function quitarCarrito(productoQuitado){
-//     let aQuitar = $(`#carrito-${productoQuitado}`)
-//     console.log(aQuitar);
-//     --carrito.length
-//     aQuitar.css("display", "none")
-//     console.log(productoQuitado)
-//     localS();
-// }
-
 // MODAL CUPON ANIMADO
 // Crea un popup donde se informa un cupón de descuento
 $("html").append(`
@@ -303,246 +249,284 @@ $("html").append(`
       <h5 class="modal-title">Solo por hoy</h5>
     </div>
     <div class="modal-body">
-      <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené un 20% OFF</p>
+      <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené envío gratis a todo el país</p>
     </div>
   </div>
 </div>
 </div>
 `)
-// $("body").animate({
-//     opacity: '0.2'
-//     //oscurece el fondo para darle mayor importancia al popup
-// },
-//     "slow",
-//     // El popup aparece y desaparece solo
-//     () => {
-//         $(".modal-cupon")
-//             .fadeIn(1000)
-//             .delay(2500)
-//             .fadeOut(1000, () => {
-//                 $("body").animate({
-//                     opacity: '1'
-//                 }, "slow")
-//                 //vuelve a mostrar el body normal
-//             });
-//     })
-
-
-// FILTROS
-// AL BUSCAR UN PRODUCTO, SE MUESTRA EN PANTALLA RESULTADOS SEGUN LA COINCIDENCIA DE LA BUSQUEDA CON EL TITULO DEL ALBUM
-
-// Función para mostrar todos los productos
-const displayFlex = () => {
-    for (producto of $(".producto")) {
-        $(producto).css("display", "flex");
-    }
-}
-
-// $(".buscador__input").keyup((e) => {
-//     const busqueda = e.target.value.toUpperCase();
-//     for (producto of $(".producto")) {
-//         const titulo = producto.children[1];
-//         const tituloCoincidir = titulo.textContent;
-//         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-
-//             $(producto).fadeIn();
-
-//         } else {
-//             $(producto).fadeOut(1000);
-//         }
-
-//         if ((tituloCoincidir.toUpperCase().includes(busqueda)) && ($("#filtro-cd").is(':checked'))) {
-//             $(producto.children[3].textContent).fadeIn();
-//         } 
-
-
-//     }
-// })
-
-// $(".buscador__input").keyup((e) => {
-//     const busqueda = e.target.value.toUpperCase();
-//     for (producto of $(".producto")) {
-//         const titulo = producto.children[1];
-//         const tituloCoincidir = titulo.textContent;
-//         if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
-
-//             $(producto).fadeIn();
-
-//         } else {
-//             $(producto).fadeOut(1000);
-//         }
-
-//         if ((tituloCoincidir.toUpperCase().includes(busqueda)) && ($("#filtro-cd").is(':checked'))) {
-//             $(producto.children[3].textContent).fadeIn();
-//         } 
-
-
-//     }
-// })
-// SEARCH FILTER
-const search = document.getElementById("buscador__input");
-const productName = document.querySelectorAll(".producto__album");
-
-// A BETTER WAY TO FILTER THROUGH THE PRODUCTS
-search.addEventListener("keyup", filterProducts);
-
-
-function filterProducts(e) {
-    const text = e.target.value.toLowerCase();
-    // console.log(productName[0]);
-    productName.forEach(function (product) {
-        const item = product.firstChild.textContent;
-        if (item.toLowerCase().indexOf(text) != -1) {
-            product.parentElement.style.display = "flex"
-        } else {
-            product.parentElement.style.display = "none"
-        }
+$("body").animate({
+    opacity: '0.2'
+    //oscurece el fondo para darle mayor importancia al popup
+},
+    "slow",
+    // El popup aparece y desaparece solo
+    () => {
+        $(".modal-cupon")
+            .fadeIn(1000)
+            .delay(2500)
+            .fadeOut(1000, () => {
+                $("body").animate({
+                    opacity: '1'
+                }, "slow")
+                //vuelve a mostrar el body normal
+            });
     })
+
+
+// ---------------- FILTROS -------------
+// FUNCIONES PARA OCULTAR O MOSTRAR PRODUCTOS
+function mostrarProductos(elemento) {
+    $(elemento).fadeIn("fast");
 }
-const btns = document.querySelectorAll('.filtros__formato__input');
-const storeProducts = document.querySelectorAll('.producto');
-// const search = document.getElementById(search);
+function ocultarProductos(elemento) {
+    $(elemento).fadeOut(200);
+}
 
-for (i = 0; i < btns.length; i++) {
+// BUSCAR PRODUCTO POR NOMBRE
+$(".buscador__input").keyup((e) => {
+    const busqueda = e.target.value.toUpperCase();
+    for (producto of $(".producto")) {
+        const tituloCoincidir = producto.children[1].textContent;
+        // Si lo que se escribe coincide con el título del producto, lo muestra; si no, lo oculta
+        if ((tituloCoincidir.toUpperCase().includes(busqueda))) {
+            mostrarProductos(producto);
+        } else {
+            ocultarProductos(producto);
+        }
+    }
+    // Condicional para resetear el filtro del precio
+    const filtroPrecioMax = $("input#precio").attr("max")
+    if ($("input#precio").text(filtroPrecioMax) > $("input#precio").attr("max")) {
+        reseteaFiltroPrecio()
+    }
+})
 
-    btns[i].addEventListener('click', (e) => {
+// FUNCION PARA FILTRAR POR FORMATO DEL ALBUM
+function filtrarFormatos(etiqueta) {
+    etiqueta.click((e) => {
         e.preventDefault()
-        const filter = e.target.dataset.filter;
-        console.log(filter);
-
-        storeProducts.forEach((product) => {
-
-
-            if (filter === 'all') {
-                product.style.display = 'flex'
+        const filtro = e.target.value.toUpperCase();
+        for (producto of $(".producto")) {
+            mostrarProductos(producto);
+            // const formatoCoincidir = $("span.producto__formato").text();
+            const formatoCoincidir = producto.children[3].textContent;
+            if (formatoCoincidir.toUpperCase().includes(filtro)) {
+                mostrarProductos(producto);
             } else {
-                if (product.classList.contains(filter)) {
-                   
-                        product.style.display = 'flex'
-                    
-                } else {
-                    product.style.display = 'none'
-                }
+                ocultarProductos(producto);
             }
-        });
-        $("#buscador__input").val("")
-    });
+        };
+        // Restablece el valor del input del buscador
+        $("input.buscador__input").val("");
+        // Oculta la sección de remeras de Mercado Libre
+        $("#meli").hide();
+        // Reseta el filtro de precio máximo
+        reseteaFiltroPrecio();
+    })
 };
+// Filtra por CD
+const filtroCD = $("#filtro-cd");
+filtrarFormatos(filtroCD);
+// Filtra por vinilo
+const filtroVinilo = $("#filtro-vinilo");
+filtrarFormatos(filtroVinilo);
 
-// // FLTRAR PRODUCTO POR FORMATO
-// $("#filtro-cd").click((e) => {
-//     displayFlex();
-//     const filtro = e.target.value.toUpperCase();
-//     for (producto of $(".producto")) {
-//         const formatoCoincidir = producto.children[3].textContent;
-//         if (formatoCoincidir.toUpperCase().includes(filtro)) {
-//             if (producto.style.display != "none") {
-//                 $(producto).css("display", "flex");
-//             }
-//         } else {
-//             $(producto).css("display", "none");
-//         }
-//     }
-//     // Oculta la sección de remeras de Mercado Libre
-//     $("#meli").css("display", "none")
-// })
+// MOSTRAR TODOS LOS PRODUCTOS
+const filtroTodosFormatos = $("#filtro-todos-formatos")
+filtroTodosFormatos.click((e) => {
+    e.preventDefault();
+    $("input.buscador__input").val("");
 
-
-// // Filtrar por vinilo
-// $("#filtro-vinilo").click((e) => {
-//     displayFlex();
-//     const filtro = e.target.value.toUpperCase();
-//     for (producto of $(".producto")) {
-//         const formato = producto.children[3];
-//         const formatoCoincidir = formato.textContent;
-//         if ((formatoCoincidir.toUpperCase().includes(filtro))) {
-//             if (producto.style.display != "none") {
-//                 $(producto).css("display", "flex");
-//             }
-//         } else {
-//             $(producto).css("display", "none");
-//         }
-//     }
-
-//     probando(filtro)
-//     // Oculta la sección de remeras de Mercado Libre
-//     $("#meli").css("display", "none")
-// })
-// // Mostrar todos los productos
-// const filtroTodosFormatos = $("#filtro-todos-formatos")
-// filtroTodosFormatos.click(() => {
-//     displayFlex() //albums
-//     // Muestra la sección de remeras de Mercado Libre por si tiene display = none
-//     $("#meli").css("display", "grid")
-// })
+    // Muestra la sección de remeras de Mercado Libre
+    $("#meli").show();
+    // Muestra todos los productos
+    for (producto of $(".producto")) {
+        mostrarProductos(producto);
+    }
+    // Reseta el filtro de precio máximo
+    reseteaFiltroPrecio();
+})
 
 // FILTRAR POR PRECIO
-
 $("#precio").on("input", (e) => {
-    $("#filtro-todos-formatos").prop("checked", true);
-
+    // Condicional para que borre lo escrito del input de búsqueda
+    if (!($("input.buscador__input").val(""))) {
+        $("input.buscador__input").val("");
+    }
     const filtro = parseInt(e.target.value);
     for (producto of $(".producto")) {
-        const precio = producto.children[2].children[0];
-
-        const precioCoincidir = parseInt(precio.textContent);
-
-        if (precioCoincidir < filtro) {
-
-            if (producto.style.display != "none") {
-                producto.style.display = "flex";
-            }
-
-        } else {
-            producto.style.display = "none";
+        const precioCoincidir = producto.children[2].children[0].textContent;
+        if (precioCoincidir > filtro) {
+            ocultarProductos(producto);
+        } else if (precioCoincidir < filtro) {
+            mostrarProductos(producto);
         }
-
-
         const precioParcial = document.getElementById("filtro-precio")
         precioParcial.innerHTML = `$${filtro}`
     }
-
 })
-
-
 
 // ORDENAR POR AÑO
 // Ordenar de más nuevo a más antiguo
 $("#filtro-año-reciente").click(() => {
-
     productos.sort(function (a, b) {
-        if (a.año > b.año) {
-            return -1;
-        }
-        if (a.año < b.año) {
-            return 1;
-        }
-        return 0;
+        return a.año - b.año
     })
-    actualizaTienda()
     // Oculta la sección de remeras de Mercado Libre
-    $("#meli").css("display", "none")
+    actualizaTienda();
 })
 // Ordenar de más antiguo a más nuevo
 $("#filtro-año-antiguo").click(() => {
     productos.sort(function (a, b) {
-        if (a.año < b.año) {
-            return -1;
-        }
-        if (a.año > b.año) {
-            return 1;
-        }
-        return 0;
+        return b.año - a.año
+
     })
-    actualizaTienda()
     // Oculta la sección de remeras de Mercado Libre
-    $("#meli").css("display", "none")
+    actualizaTienda()
 })
 
 // FUNCION PARA BORRAR LOS ELEMENTOS DE INICIO DE LA TIENDA Y ACTUALIZARLOS VOLVIENDOLOS A IMPRIMIR
 function actualizaTienda() {
-    while ($(".producto").length > 0) {
-        $(".producto")[0].parentNode.removeChild($(".producto")[0]);
+    while ($(".album.producto").length > 0) {
+        $(".album.producto")[0].parentNode.removeChild($(".album.producto")[0]);
     }
+    $("#meli").hide();
+    reseteaFiltroPrecio()
+    // Restablece el valor del input del buscador
+    $("input.buscador__input").val("");
     productosTienda();
+}
+
+// FUNCION PARA RESETEAR EL FILTRO DE PRECIO
+function reseteaFiltroPrecio() {
+    const filtroPrecioMax = $("input#precio").attr("max");
+    $("input#precio").val(filtroPrecioMax);
+    $("span#filtro-precio").html(`$${filtroPrecioMax}`)
+}
+
+
+$("#carrito").hide()
+// CLICK BOTON DEL CARRITO
+const botonCarrito = $(".carrito__img");
+botonCarrito.click(() => { // El modal se activa vía Bootstrap
+    pintarCarrito();
+    calcTotal();
+})
+
+// function calcTotal() {
+//     // console.log(carritoLs)
+//     // carrito = carritoLs
+//     // calcular total del carrito
+//     total = carrito.reduce((a, b) => {
+//         return a + b.precio;
+
+//     }, 0)
+//     // carrito.forEach(producto => {
+//     //     total += producto.precio;
+//         $(".total-carrito").text(total);
+//     // })
+// }
+
+function calcTotal(){
+    carritoLs = JSON.parse(localStorage.getItem("carrito"));
+    total = carritoLs.reduce((a, b) => {
+        return a + b.precio;
+    }, 0);
+    $(".total-carrito").text(total)
+}
+
+function pintarCarrito() {
+    carritoLs = JSON.parse(localStorage.getItem("carrito"));
+
+    while ($(".carrito-prod").length > 0) {
+        $(".carrito-prod")[0].parentNode.removeChild($(".carrito-prod")[0])
+    }; // Evita la duplicación de los productos ya agregados
+    for (producto of carritoLs) {
+        const div = $(`<div class="carrito-prod carrito-prod--${producto.id}"></div>`);
+        div.html(`
+        <span><b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})</span>
+        <button class="btn" onclick="quitarProducto(${producto.id})">Quitar</button>
+            `);
+        $("#modal__btn-carrito").append(div);  // Imprime los productos agregados al carrito
+    }
+}
+
+function quitarProducto(id) {
+    // busca el índice del producto a eliminar
+    let eliminar = carrito.findIndex(p => p.id == id)
+    // quita el elemento del array del carrito
+    carrito.splice(eliminar, 1);
+    // devuelve stock inicial
+    const productoQuitado = productos.find(producto => producto.id == id);
+    $(`#producto__stock${id}`).text(`${++productoQuitado.stock}`);
+    // actualiza el dom
+    pintarCarrito();
+    // actualiza total
+    calcTotal();
+    // actualiza LocalStorage
+    localS();
+    // si no hay productos agregados, oculta el modal y el btn del carrito
+    if (carrito.length == 0) {
+        $("#exampleModal").modal('hide');
+        $("#carrito").hide();
+    }
+}
+
+// Funcion para mostrar modal carrito
+function mostrarModal(){
+    $("#exampleModal").modal('show');
+    pintarCarrito();
+    calcTotal();
+}
+
+//  Finalizar Compra
+let nombresAlbum = "";
+function finalizarCompra() {
+    carritoLs = JSON.parse(localStorage.getItem("carrito"));
+    // calcTotalLS()
+    // carrito = carritoLs;
+    for (p of carritoLs) {
+        nombresAlbum += `%0D%0A${p.titulo} (${p.formato.toLowerCase()})`; // junta los títulos y formato de los productos
+    }
+    console.log(total)
+    console.log(cuponEnvio)
+    if (cuponEnvio === true) {
+        window.open(`https://api.whatsapp.com/send?phone=+5493415024120&text=Hola, quisiera realizar el siguiente pedido:${nombresAlbum}%0D%0ATotal: ${total}%0D%0AEnvío gratuito: Sí (cupón activado)`, '_blank')
+    } else {
+        window.open(`https://api.whatsapp.com/send?phone=+5493415024120&text=Hola, quisiera realizar el siguiente pedido:${nombresAlbum}%0D%0ATotal: ${total}`, '_blank')
+    }
+}
+
+// CUPON DE DESCUENTO
+let cuponEnvio = false;
+function cupon() {
+    const cuponInput = $(".cupon").val();
+    if (cuponInput.toLowerCase() === "beatle") {
+        if ($(".cupon-activado").length == 0) {
+            // evita duplicación
+            // llama a la librería Sweat Alert
+            swal({
+                text: "Cupón check!",
+                icon: "success",
+            });
+            $(".total-carrito").append(`<br><span class="cupon-activado" style="font-size: 80%">Cupón activado: Envío gratis</span>`);
+            cuponEnvio = true;
+        } else if ($(".cupon-activado").length > 0) {
+            swal({
+                text: "El cupón ya está activado",
+                icon: "info",
+            });
+        }
+    } else if (cuponInput.toLowerCase() === "") {
+        swal({
+            text: "Ingresá un cupón",
+            icon: "info",
+        });
+    } else {
+        swal({
+            text: "Ups, ese cupón no existe",
+            icon: "error",
+        });
+    }
 }

@@ -232,7 +232,7 @@ p,
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     max-width: 80%;
     margin: 25px auto;
@@ -372,4 +372,12 @@ ul {
 }
 h3 {
     font-size: 1.2rem;
+}
+
+
+// relacionados a boton carrito
+.carrito-prod {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
 }
