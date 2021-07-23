@@ -10,9 +10,6 @@ class Producto {
         this.año = año;
         this.stock = stock;
     }
-    sumarIva() {
-        return this.precio = parseFloat((this.precio * 1.21).toFixed(2));
-    }
 }
 
 let productos = [
@@ -27,6 +24,7 @@ let productos = [
 console.log(`Productos en venta: `, productos)
 
 let carrito = [];
+let carritoLs = ""
 
 // DOM: AGREGO/PINTO LOS PRODUCTOS DEL ARRAY A LA TIENDA
 function productosTienda() {
@@ -169,6 +167,7 @@ function AgregarCarrito() {
         })
     }
 }
+
 // AGREGAR CARRITO A LOCAL STORAGE Y MOSTRAR CANTIDAD DE ELEMENTOS AGREGADOS ARRIBA DEL BOTON DEL CARRITO
 function localS() {
     localStorage.setItem("carrito", JSON.stringify(carrito));
@@ -178,14 +177,6 @@ function localS() {
     carritoNum.innerHTML = carrito.length;
     console.log(carrito.length)
 }
-
-// el número se muestra si hay elementos en el carrito
-// let carritoNum = document.getElementById("carrito__numero");
-// if (carrito.length == 0) {
-//     carritoNum.style.display = "none"
-// } else {
-//     carritoNum.innerHTML = carrito.length;
-// }
 
 // MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
 let productosDelLs = JSON.parse(localStorage.getItem("carrito"));
@@ -198,10 +189,10 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false 
         const div = document.createElement("div");
         div.setAttribute("class", "recientes__producto");
         div.innerHTML = `
-    <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
-    <h2 class="producto__album">${producto.titulo}</h2>
-    <span class="producto__formato">${producto.formato}</span>
-    `;
+        <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
+        <h2 class="producto__album">${producto.titulo}</h2>
+        <span class="producto__formato">${producto.formato}</span>
+        `;
         const recientes = document.querySelector("#recientes__productos")
         recientes.appendChild(div);
         // Cambia el contenido del encabezado, de plural (por defecto en el HTML) a singular si en el storage hay un solo producto
@@ -211,67 +202,39 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false 
         }
     });
 
-// AL HACER CLIC EN COMPRAR (EN SECCION AGREGADOS POR ULTIMA VEZ -SOLO VISIBLE SI HAY PRODUCTOS GUARDADOS EN EL STORAGE), SE ABRE UN MODAL CON LOS PRODUCTOS PARA CONFIRMAR COMPRA O BORRAR
-let carritoLs = ""
-const btnComprarProductosLS = document.querySelector(".recientes__comprar");
-btnComprarProductosLS.addEventListener('click', () => {
-    carritoLs = JSON.parse(localStorage.getItem("carrito"));
-    if (!document.getElementById("productoLocalModal")) {
-        for (let producto of carritoLs) {
-            const div = document.createElement("div");
-            div.setAttribute("id", "productoLocalModal")
-            div.innerHTML = `
-            <b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})
-            `;
-            console.log(producto)
-            const modalProductosLocalStorage = document.querySelector("#modal__productosLocalStorage");
-            modalProductosLocalStorage.appendChild(div)
-        }
-    }
-    // AL HACER CLICK EN EL BOTON "QUITAR", SE REMUEVEN LOS PRODUCTOS DEL LOCAL STORAGE Y SE REMUEVE EN EL HTML LA SECCION "PRODUCTOS AGREGADOS POR ULTIMA VEZ"
-    const btnQuitarProductosLS = document.querySelector("#modal__quitarProductosLS");
-    btnQuitarProductosLS.addEventListener('click', () => {
-        localStorage.getItem("carrito")
-        localStorage.removeItem("carrito");
-
-        const recientes = document.querySelector("#recientes");
-        recientes.parentElement.removeChild(recientes)
-    })
-})
-
 // MODAL CUPON ANIMADO
 // Crea un popup donde se informa un cupón de descuento
-$("html").append(`
-<div class="modal modal-cupon" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-  <div class="modal-content">
-    <div class="modal-header modal-cupon__header">
-      <h5 class="modal-title">Solo por hoy</h5>
-    </div>
-    <div class="modal-body">
-      <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené envío gratis a todo el país</p>
-    </div>
-  </div>
-</div>
-</div>
-`)
-$("body").animate({
-    opacity: '0.2'
-    //oscurece el fondo para darle mayor importancia al popup
-},
-    "slow",
-    // El popup aparece y desaparece solo
-    () => {
-        $(".modal-cupon")
-            .fadeIn(1000)
-            .delay(2500)
-            .fadeOut(1000, () => {
-                $("body").animate({
-                    opacity: '1'
-                }, "slow")
-                //vuelve a mostrar el body normal
-            });
-    })
+// $("html").append(`
+// <div class="modal modal-cupon" tabindex="-1">
+// <div class="modal-dialog modal-dialog-centered">
+//   <div class="modal-content">
+//     <div class="modal-header modal-cupon__header">
+//       <h5 class="modal-title">Solo por hoy</h5>
+//     </div>
+//     <div class="modal-body">
+//       <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené envío gratis a todo el país</p>
+//     </div>
+//   </div>
+// </div>
+// </div>
+// `)
+// $("body").animate({
+//     opacity: '0.2'
+//     //oscurece el fondo para darle mayor importancia al popup
+// },
+//     "slow",
+//     // El popup aparece y desaparece solo
+//     () => {
+//         $(".modal-cupon")
+//             .fadeIn(1000)
+//             .delay(2500)
+//             .fadeOut(1000, () => {
+//                 $("body").animate({
+//                     opacity: '1'
+//                 }, "slow")
+//                 //vuelve a mostrar el body normal
+//             });
+//     })
 
 
 // ---------------- FILTROS -------------
@@ -337,7 +300,6 @@ const filtroTodosFormatos = $("#filtro-todos-formatos")
 filtroTodosFormatos.click((e) => {
     e.preventDefault();
     $("input.buscador__input").val("");
-
     // Muestra la sección de remeras de Mercado Libre
     $("#meli").show();
     // Muestra todos los productos
@@ -379,8 +341,7 @@ $("#filtro-año-reciente").click(() => {
 // Ordenar de más antiguo a más nuevo
 $("#filtro-año-antiguo").click(() => {
     productos.sort(function (a, b) {
-        return b.año - a.año
-
+        return b.año - a.año;
     })
     // Oculta la sección de remeras de Mercado Libre
     actualizaTienda()
@@ -405,30 +366,15 @@ function reseteaFiltroPrecio() {
     $("span#filtro-precio").html(`$${filtroPrecioMax}`)
 }
 
-
-$("#carrito").hide()
 // CLICK BOTON DEL CARRITO
 const botonCarrito = $(".carrito__img");
 botonCarrito.click(() => { // El modal se activa vía Bootstrap
     pintarCarrito();
     calcTotal();
+    $(".btn-quitar").show(); // para que los productos almacenados del local no puedan quitarse
 })
 
-// function calcTotal() {
-//     // console.log(carritoLs)
-//     // carrito = carritoLs
-//     // calcular total del carrito
-//     total = carrito.reduce((a, b) => {
-//         return a + b.precio;
-
-//     }, 0)
-//     // carrito.forEach(producto => {
-//     //     total += producto.precio;
-//         $(".total-carrito").text(total);
-//     // })
-// }
-
-function calcTotal(){
+function calcTotal() {
     carritoLs = JSON.parse(localStorage.getItem("carrito"));
     total = carritoLs.reduce((a, b) => {
         return a + b.precio;
@@ -438,7 +384,6 @@ function calcTotal(){
 
 function pintarCarrito() {
     carritoLs = JSON.parse(localStorage.getItem("carrito"));
-
     while ($(".carrito-prod").length > 0) {
         $(".carrito-prod")[0].parentNode.removeChild($(".carrito-prod")[0])
     }; // Evita la duplicación de los productos ya agregados
@@ -446,35 +391,41 @@ function pintarCarrito() {
         const div = $(`<div class="carrito-prod carrito-prod--${producto.id}"></div>`);
         div.html(`
         <span><b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})</span>
-        <button class="btn" onclick="quitarProducto(${producto.id})">Quitar</button>
+        <button class="btn btn-quitar" onclick="quitarProducto(${producto.id})">Quitar</button>
             `);
         $("#modal__btn-carrito").append(div);  // Imprime los productos agregados al carrito
     }
 }
 
 function quitarProducto(id) {
+    carritoLs = JSON.parse(localStorage.getItem("carrito"));
     // busca el índice del producto a eliminar
-    let eliminar = carrito.findIndex(p => p.id == id)
+    let eliminar = carritoLs.findIndex(p => p.id == id)
     // quita el elemento del array del carrito
+    carritoLs.splice(eliminar, 1);
     carrito.splice(eliminar, 1);
+    //actualiza Local Storage
+    localStorage.setItem("carrito", JSON.stringify(carritoLs));
+    localS()
     // devuelve stock inicial
     const productoQuitado = productos.find(producto => producto.id == id);
     $(`#producto__stock${id}`).text(`${++productoQuitado.stock}`);
     // actualiza el dom
     pintarCarrito();
+    $(".btn-quitar").show(); // para que los productos almacenados del local no puedan quitarse
     // actualiza total
     calcTotal();
-    // actualiza LocalStorage
-    localS();
     // si no hay productos agregados, oculta el modal y el btn del carrito
-    if (carrito.length == 0) {
+    if (carritoLs.length == 0) {
         $("#exampleModal").modal('hide');
         $("#carrito").hide();
+        const recientes = document.querySelector("#recientes");
+        recientes.parentElement.removeChild(recientes)
     }
 }
 
 // Funcion para mostrar modal carrito
-function mostrarModal(){
+function mostrarModal() {
     $("#exampleModal").modal('show');
     pintarCarrito();
     calcTotal();

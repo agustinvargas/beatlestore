@@ -97,6 +97,7 @@ p,
 
 #carrito {
     position: relative;
+    display: none;
 }
 
 #carrito__numero {
@@ -380,4 +381,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center
+}
+.btn-quitar{
+    display: none;
 }
