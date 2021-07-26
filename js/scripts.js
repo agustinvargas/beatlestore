@@ -18,7 +18,7 @@ let productos = [
     new Producto(5, "img/let-it-be-cd.png", "Let It Be", 1390, "CD", 1970, 3),
     new Producto(6, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
     new Producto(7, "img/help-cd.png", "Help!", 1350, "CD", 1965, 4),
-    new Producto(8, "img/revolver-vinilo.png", "Revolver", 3990, "Vinilo", 1966, 4),
+    new Producto(8, "img/revolver-vinilo.png", "Revolver", 3490, "Vinilo", 1966, 4),
     new Producto(9, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
 ];
 let carrito = [];
@@ -92,7 +92,6 @@ function agregarCarrito() {
     for (const boton of btnAgregarCarrito) {
         boton.addEventListener('click', (event) => {
             const botonClickeado = event.target;
-            console.log(botonClickeado.id);
             // halla el producto que coincida con el id del botón
             let productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
             if (productoAgregado.stock > 0) {
@@ -162,7 +161,6 @@ function localS() {
     carritoNum = document.getElementById("carrito__numero");
     carritoNum.style.display = "inherit"
     carritoNum.innerHTML = carrito.length;
-    console.log(carrito.length)
 }
 // MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
 let productosDelLs = JSON.parse(localStorage.getItem("carrito"));
@@ -386,8 +384,6 @@ function finalizarCompra() {
     for (p of carritoLs) {
         nombresAlbum += `%0D%0A${p.titulo} (${p.formato.toLowerCase()})`; // junta los títulos y formato de los productos
     }
-    console.log(total)
-    console.log(cuponEnvio)
     if (cuponEnvio === true) {
         window.open(`https://api.whatsapp.com/send?phone=+5493415024120&text=Hola, quisiera realizar el siguiente pedido:${nombresAlbum}%0D%0ATotal: ${total}%0D%0AEnvío gratuito: Sí (cupón activado)`, '_blank')
     } else {
