@@ -1,4 +1,4 @@
-// CREA OBJETOS, ARRAY DE PRODUCTOS
+// CREA OBJETOS, ARRAY DE PRODUCTOS Y CARRITO
 class Producto {
     constructor(id, img, titulo, precio, formato, año, stock) {
         this.id = id;
@@ -12,11 +12,14 @@ class Producto {
 }
 let productos = [
     new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 2),
-    new Producto(2, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
-    new Producto(3, "img/with-the-beatles-cd.png", "With the Beatles", 990, "CD", 1963, 6),
-    new Producto(4, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
-    new Producto(5, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
-    new Producto(6, "img/abbey-road-cd.png", "Abbey Road", 1290, "CD", 1969, 7),
+    new Producto(2, "img/with-the-beatles-cd.png", "With the Beatles", 990, "CD", 1963, 6),
+    new Producto(3, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
+    new Producto(4, "img/abbey-road-cd.png", "Abbey Road", 1290, "CD", 1969, 7),
+    new Producto(5, "img/let-it-be-cd.png", "Let It Be", 1390, "CD", 1970, 3),
+    new Producto(6, "img/with-the-beatles-vinilo.png", "With the Beatles", 1790, "Vinilo", 1963, 4),
+    new Producto(7, "img/help-cd.png", "Help!", 1350, "CD", 1965, 4),
+    new Producto(8, "img/revolver-vinilo.png", "Revolver", 3990, "Vinilo", 1966, 4),
+    new Producto(9, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
 ];
 let carrito = [];
 let carritoLs = "";
@@ -33,7 +36,7 @@ function productosTienda() {
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
     <div class="div-agregar">
-    <img src="img/whatsapp.png" onclick="wsp('${producto.formato}', '${producto.titulo.replace("'", "´")}')" class="btn-wasap")>
+    <img src="img/whatsapp.png" onclick="wsp('${producto.formato}', '${producto.titulo.replace("'", "´")}')" class="btn-wasap" alt="WhatsApp")>
     <button id="${producto.id}" class="agregar-carrito btn btn-dark">Agregar</button>
     </div>
     `);
