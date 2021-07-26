@@ -43,7 +43,7 @@ function productosTienda() {
         $(".tienda").prepend($(productosContenedor));
     }); //usa el método .replace para evitar errores con el apóstrofe
     agregarCarrito()
-    console.log("Carrito: ", carrito)
+    console.log("Carrito: ", carrito);
 } productosTienda()
 
 // LLAMA A LA API DE WHATSAPP PARA ENVIAR MENSAJE SEGÚN EL PRODUCTO
