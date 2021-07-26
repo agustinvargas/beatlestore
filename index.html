@@ -5,19 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- CSS Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <!-- Mi CSS -->
     <link rel="stylesheet" href="css\estilos.css">
     <title>Home | Beatlestore</title>
 </head>
 
 <body class="body-fondo">
     <div class="envoltura">
-
-
         <header id="header">
             <!-- menú navegación -->
             <nav class="menu-desk">
@@ -30,7 +27,7 @@
                     <li id="carrito">
                         <img class="carrito__img" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             src="img\carrito.png" alt="Carrito">
-                        <span id="carrito__numero"></span>
+                        <span class="btn" id="carrito__numero"></span>
                     </li>
                 </ul>
             </nav>
@@ -44,7 +41,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="modal__btn-carrito">
-
                     </div>
                     <div class="modal-footer justify-content-between">
                         <div>
@@ -64,47 +60,19 @@
         <div id="buscador">
             <input class="buscador__input" type="text" placeholder="Buscar productos">
         </div>
-
-
         <!--  Productos -->
         <section>
             <!-- productos del local storage -->
             <div id="recientes">
                 <div class="recientes__encabezado">
                     <h3 class="recientes__titulo">Productos agregados por última vez</h3>
-                    <button type="button" class="recientes__comprar btn btn-primary" onclick="mostrarModal()" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">Comprar</button>
+                    <button type="button" class="recientes__comprar btn btn-primary" onclick="mostrarModal()"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">Comprar</button>
                 </div>
                 <div id="recientes__productos"></div>
             </div>
-
-            <!-- Modal asociado a productos del Local Storage-->
-            <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Tenés pendiente de compra estos productos
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div id="modal__productosLocalStorage" class="modal-body"></div>
-                        <div class="modal-footer">
-                            <input type="text" onkeypress="if(event.keyCode == 13) cupon()" class="btn btn-secondary cupon" placeholder="Insertá tu cupón">
-                            <button type="button" onclick="cupon()" class="btn btn-primary">Actualizar</button>
-                            <button type="button" id="modal__quitarProductosLS" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Quitar</button>
-                            <button type="button" onclick="finalizarCompra()" class="btn btn-primary">Finalizar
-                                compra</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <!-- productos a la venta -->
             <div class="tienda"></div>
-            <!-- <div class="remeras"></div> -->
-
             <!-- productos de mercado libre -->
             <div id="meli">
                 <div class="recientes__encabezado">
@@ -121,49 +89,42 @@
                 <h2 class="filtros__titulo">Filtrar productos</h2>
                 <!-- Ordenar por formato -->
                 <form class="filtros__formato" action="">
-                    <button class="filtros__formato__input" id="filtro-todos-formatos" value="todos">Todos los
+                    <button class="filtros__formato__input btn btn-light" id="filtro-todos-formatos" value="todos">Todos
+                        los
                         productos</button>
-                    <button class="filtros__formato__input" id="filtro-cd" value="cd">Solo Cds</button>
-                    <button class="filtros__formato__input" id="filtro-vinilo" value="vinilo">Solo vinilos</button>
-
+                    <button class="filtros__formato__input btn btn-light" id="filtro-cd" value="cd">Solo CDs</button>
+                    <button class="filtros__formato__input btn btn-light" id="filtro-vinilo" value="vinilo">Solo
+                        vinilos</button>
                     <!-- Ordenar por año -->
-                    <input class="filtros__formato__input" type="button" name="filtros" id="filtro-año-reciente"
-                        value="Más recientes primero">
-                    <input class="filtros__formato__input" type="button" name="filtros" id="filtro-año-antiguo"
-                        value="Más antiguos primero">
-
+                    <input class="filtros__formato__input btn btn-light" type="button" name="filtros"
+                        id="filtro-año-reciente" value="Más recientes primero">
+                    <input class="filtros__formato__input btn btn-light" type="button" name="filtros"
+                        id="filtro-año-antiguo" value="Más antiguos primero">
                     <!-- Ordenar por precio -->
-                    <label for="precio">Precio máximo: <span id="filtro-precio">$3500</span></label><br>
+                    <label class="filtra-precio" for="precio">Precio máximo: <span
+                            id="filtro-precio">$3500</span></label>
                     <input type="range" id="precio" name="precio" min="1000" max="3500" value="3500">
-
                 </form>
             </div>
         </aside>
-
     </div>
-    <section class="plataformas">
-        <!-- <div class="plataformas__spotify">
-            <span>ACA VA INFO DE API DE SPOTIFY</span>
-        </div>
 
-        <div class="plataformas__deezer">
-            <span>ACA VA INFO API DE DEEZER</span>
-        </div> -->
-    </section>
-
+    <footer>
+        <span id="footer">Simulador desarrollado con fines educativos por <a
+                href="https://github.com/agustinvargas/beatlestore" target="_blank"
+                id="github">/agustinvargas</a></span>
+    </footer>
     <!-- JavaScript JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
     <!-- JavaScript Bundle with Popper (Bootstrap) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <!-- Sweel Alert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+    <!-- Mi JS -->
     <script src="js\scripts.js"></script>
 </body>
-
-
 
 </html>

@@ -1,5 +1,4 @@
-//CREA OBJETOS, ARRAY DE PRODUCTOS
-
+// CREA OBJETOS, ARRAY DE PRODUCTOS
 class Producto {
     constructor(id, img, titulo, precio, formato, año, stock) {
         this.id = id;
@@ -11,7 +10,6 @@ class Producto {
         this.stock = stock;
     }
 }
-
 let productos = [
     new Producto(1, "img/hard-days-night-cd.png", "A Hard Day's Night", 1199, "CD", 1964, 2),
     new Producto(2, "img/hard-days-night-vinilo.png", "A Hard Day's Night", 2990, "Vinilo", 1964, 6),
@@ -20,11 +18,8 @@ let productos = [
     new Producto(5, "img/abbey-road-vinilo.png", "Abbey Road", 3290, "Vinilo", 1969, 7),
     new Producto(6, "img/abbey-road-cd.png", "Abbey Road", 1290, "CD", 1969, 7),
 ];
-
-console.log(`Productos en venta: `, productos)
-
 let carrito = [];
-let carritoLs = ""
+let carritoLs = "";
 
 // DOM: AGREGO/PINTO LOS PRODUCTOS DEL ARRAY A LA TIENDA
 function productosTienda() {
@@ -37,18 +32,20 @@ function productosTienda() {
     <span>$<span class="producto__precio">${producto.precio}</span></span>
     <span class="producto__formato">${producto.formato}<span class="producto__año"> ${producto.año}</span></span>
     <span id="${producto.id}" class="producto__stock">Stock: <span id="producto__stock${producto.id}">${producto.stock}</span></span>
-    <button id="${producto.id}" class="agregar-carrito">Agregar</button>
+    <div class="div-agregar">
     <img src="img/whatsapp.png" onclick="wsp('${producto.formato}', '${producto.titulo.replace("'", "´")}')" class="btn-wasap")>
+    <button id="${producto.id}" class="agregar-carrito btn btn-dark">Agregar</button>
+    </div>
     `);
         $(".tienda").prepend($(productosContenedor));
     }); //usa el método .replace para evitar errores con el apóstrofe
-    AgregarCarrito()
+    agregarCarrito()
     console.log("Carrito: ", carrito)
 } productosTienda()
 
 // LLAMA A LA API DE WHATSAPP PARA ENVIAR MENSAJE SEGÚN EL PRODUCTO
 function wsp(formato, titulo) {
-    window.open(`https://api.whatsapp.com/send?phone=34123456789&text=MENSAJE FICTICIO: Hola, me interesa comprar el ${formato.toLowerCase()} ${titulo.replace("´", "'")}`, '_blank')
+    window.open(`https://api.whatsapp.com/send?phone=+5493415024120&text=Hola, me interesa comprar el ${formato.toLowerCase()} ${titulo.replace("´", "'")}`, '_blank')
 }
 
 // CREA PRODUCTOS (REMERAS) DESDE LA API DE MERCADO LIBRE
@@ -60,9 +57,8 @@ class Remeras {
         this.link = link
     };
 }
-
 function mercadolibreApi() {
-    const urlMl = 'https://api.mercadolibre.com/sites/MLA/search?q=remeras%20beatles&limit=9#json' // Link a la API de MeLi
+    const urlMl = 'https://api.mercadolibre.com/sites/MLA/search?q=remeras%20beatles&seller_id=189848245&limit=9#json' // Link a la API de MeLi
     let misDatos = [];
     $.getJSON(urlMl, (data) => {
         console.log(data.results)
@@ -70,7 +66,6 @@ function mercadolibreApi() {
             let remerasMeLi = new Remeras(dato.thumbnail, dato.title, dato.price, dato.permalink);
             misDatos.push(remerasMeLi)
         }
-
         //pinta los productos en el html/dom
         for (producto of misDatos) {
             const div = document.createElement("div");
@@ -79,7 +74,7 @@ function mercadolibreApi() {
     <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
     <h2 class="producto__album">${producto.titulo}</h2>
     <span>$<span class="producto__precio">${producto.precio}</span></span>
-    <button class="agregar-carrito"><a href="${producto.link}">Ver en Mercado Libre</a></button>
+    <button class="agregar-carrito btn-meli btn btn-dark"><a href="${producto.link}" target="_blank">Ver en Mercado Libre</a></button>
     `;
             const recientes = document.querySelector("#meli__producto")
             recientes.appendChild(div);
@@ -89,51 +84,43 @@ function mercadolibreApi() {
 
 // AL CLICKEAR EL BOTON "AGREGAR AL CARRITO", SE TOMA EL PRODUCTO AGREGADO (SE AGREGA AL ARRAY) Y SE LE RESTA UNO AL STOCK
 let total = 0
-function AgregarCarrito() {
+function agregarCarrito() {
     const btnAgregarCarrito = document.getElementsByClassName('agregar-carrito');
     for (const boton of btnAgregarCarrito) {
         boton.addEventListener('click', (event) => {
             const botonClickeado = event.target;
             console.log(botonClickeado.id);
+            // halla el producto que coincida con el id del botón
             let productoAgregado = productos.find((producto) => producto.id === parseInt(botonClickeado.id));
-
             if (productoAgregado.stock > 0) {
                 // Llama a la librería Sweat Alert
                 swal({
                     text: `Agregaste el producto ${productoAgregado.titulo}`,
                     icon: "success",
                 });
-
                 // Descuenta uno del stock del producto
                 --productoAgregado.stock;
-
+                // Modifica el dom en la parte de stock
                 let id = `producto__stock${productoAgregado.id}`
                 let span = document.createElement("span");
                 span.setAttribute("id", id);
-
                 let productoAgregadoStock = document.createTextNode(`${productoAgregado.stock}`);
                 span.appendChild(productoAgregadoStock);
-
                 let padreEtiqueta = document.getElementById(`${productoAgregado.id}`);
                 let hijoEtiqueta = document.getElementById(`producto__stock${productoAgregado.id}`);
-
                 padreEtiqueta.replaceChild(span, hijoEtiqueta);
-
+                // Agrega al carrito el producto agregado
                 carrito.unshift(productoAgregado);
                 if (carrito.length > 0) {
                     $("#carrito").show()
                 };
                 // Guarda en el Local Storage
                 localS();
-
-                // Actaliza valor del carrito
-                // calcTotal();
                 // Si se agrega productos al carrito, se remueve la sección AGREGADOS POR ULTIMA VEZ
                 let pRecientes = document.getElementById("recientes");
                 if (pRecientes) {
                     pRecientes.style.display = "none";
                 }
-
                 // ANIMACIÓN: LLEVA HASTA ARRIBA DE LA PANTALLA, MUEVE EL BOTÓN DEL CARRITO Y LO VUELVE A SU ESTADO ORIGINAL
                 $('html, body').animate({
                     scrollTop: $("body").offset().top
@@ -154,8 +141,6 @@ function AgregarCarrito() {
                         )
                     }
                 );
-                console.log("Carrito: ", carrito)
-                // carritoBoton(productoAgregado);
             } else {
                 // Llama a la librería Sweat Alert
                 swal({
@@ -167,7 +152,6 @@ function AgregarCarrito() {
         })
     }
 }
-
 // AGREGAR CARRITO A LOCAL STORAGE Y MOSTRAR CANTIDAD DE ELEMENTOS AGREGADOS ARRIBA DEL BOTON DEL CARRITO
 function localS() {
     localStorage.setItem("carrito", JSON.stringify(carrito));
@@ -177,7 +161,6 @@ function localS() {
     carritoNum.innerHTML = carrito.length;
     console.log(carrito.length)
 }
-
 // MOSTRAR SECCION "AGREGADOS RECIENTEMENTE", DONDE SE MUESTRAN LOS PRODUCTOS ALMACENADOS EN LOCAL
 let productosDelLs = JSON.parse(localStorage.getItem("carrito"));
 // chequea que haya productos guardados en el LocalS
@@ -189,10 +172,10 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false 
         const div = document.createElement("div");
         div.setAttribute("class", "recientes__producto");
         div.innerHTML = `
-        <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
-        <h2 class="producto__album">${producto.titulo}</h2>
-        <span class="producto__formato">${producto.formato}</span>
-        `;
+            <img class="producto__img" src=${producto.img} alt="Tapa del álbum">
+            <h2 class="producto__album">${producto.titulo}</h2>
+            <span class="producto__formato">${producto.formato}</span>
+            `;
         const recientes = document.querySelector("#recientes__productos")
         recientes.appendChild(div);
         // Cambia el contenido del encabezado, de plural (por defecto en el HTML) a singular si en el storage hay un solo producto
@@ -202,48 +185,13 @@ if (productosDelLs === null || localStorage.hasOwnProperty('carrito') === false 
         }
     });
 
-// MODAL CUPON ANIMADO
-// Crea un popup donde se informa un cupón de descuento
-// $("html").append(`
-// <div class="modal modal-cupon" tabindex="-1">
-// <div class="modal-dialog modal-dialog-centered">
-//   <div class="modal-content">
-//     <div class="modal-header modal-cupon__header">
-//       <h5 class="modal-title">Solo por hoy</h5>
-//     </div>
-//     <div class="modal-body">
-//       <p style="color:initial">Usá el cupón <b>BEATLE</b> y obtené envío gratis a todo el país</p>
-//     </div>
-//   </div>
-// </div>
-// </div>
-// `)
-// $("body").animate({
-//     opacity: '0.2'
-//     //oscurece el fondo para darle mayor importancia al popup
-// },
-//     "slow",
-//     // El popup aparece y desaparece solo
-//     () => {
-//         $(".modal-cupon")
-//             .fadeIn(1000)
-//             .delay(2500)
-//             .fadeOut(1000, () => {
-//                 $("body").animate({
-//                     opacity: '1'
-//                 }, "slow")
-//                 //vuelve a mostrar el body normal
-//             });
-//     })
-
-
 // ---------------- FILTROS -------------
 // FUNCIONES PARA OCULTAR O MOSTRAR PRODUCTOS
 function mostrarProductos(elemento) {
     $(elemento).fadeIn("fast");
 }
 function ocultarProductos(elemento) {
-    $(elemento).fadeOut(200);
+    $(elemento).fadeOut("slow");
 }
 
 // BUSCAR PRODUCTO POR NOMBRE
@@ -264,7 +212,6 @@ $(".buscador__input").keyup((e) => {
         reseteaFiltroPrecio()
     }
 })
-
 // FUNCION PARA FILTRAR POR FORMATO DEL ALBUM
 function filtrarFormatos(etiqueta) {
     etiqueta.click((e) => {
@@ -309,7 +256,6 @@ filtroTodosFormatos.click((e) => {
     // Reseta el filtro de precio máximo
     reseteaFiltroPrecio();
 })
-
 // FILTRAR POR PRECIO
 $("#precio").on("input", (e) => {
     // Condicional para que borre lo escrito del input de búsqueda
@@ -328,7 +274,6 @@ $("#precio").on("input", (e) => {
         precioParcial.innerHTML = `$${filtro}`
     }
 })
-
 // ORDENAR POR AÑO
 // Ordenar de más nuevo a más antiguo
 $("#filtro-año-reciente").click(() => {
@@ -391,7 +336,7 @@ function pintarCarrito() {
         const div = $(`<div class="carrito-prod carrito-prod--${producto.id}"></div>`);
         div.html(`
         <span><b>${producto.titulo}</b> en ${producto.formato.toLowerCase()} ($${producto.precio})</span>
-        <button class="btn btn-quitar" onclick="quitarProducto(${producto.id})">Quitar</button>
+        <button class="btn btn-quitar" onclick="quitarProducto(${producto.id})"></button>
             `);
         $("#modal__btn-carrito").append(div);  // Imprime los productos agregados al carrito
     }
@@ -423,14 +368,12 @@ function quitarProducto(id) {
         recientes.parentElement.removeChild(recientes)
     }
 }
-
 // Funcion para mostrar modal carrito
 function mostrarModal() {
     $("#exampleModal").modal('show');
     pintarCarrito();
     calcTotal();
 }
-
 //  Finalizar Compra
 let nombresAlbum = "";
 function finalizarCompra() {
@@ -448,8 +391,40 @@ function finalizarCompra() {
         window.open(`https://api.whatsapp.com/send?phone=+5493415024120&text=Hola, quisiera realizar el siguiente pedido:${nombresAlbum}%0D%0ATotal: ${total}`, '_blank')
     }
 }
-
-// CUPON DE DESCUENTO
+// --------- CUPON DE DESCUENTO ------------
+// MODAL CUPON ANIMADO
+// Crea un popup donde se informa un cupón de descuento
+$("html").append(`
+<div class="modal modal-cupon" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content">
+    <div class="modal-header modal-cupon__header">
+      <h5 class="modal-title">Aprovechá tu beneficio</h5>
+    </div>
+    <div class="modal-body">
+      <p style="color:initial">Con el cupón <strong>BEATLE</strong> tenés envío gratis a todo el país</p>
+    </div>
+  </div>
+</div>
+</div>
+`)
+$("body").animate({
+    opacity: '0.2'
+    //oscurece el fondo para darle mayor importancia al popup
+},
+    "slow",
+    // El popup aparece y desaparece solo
+    () => {
+        $(".modal-cupon")
+            .fadeIn(1000)
+            .delay(3250)
+            .fadeOut(1000, () => {
+                $("body").animate({
+                    opacity: '1'
+                }, "slow")
+                //vuelve a mostrar el body normal
+            });
+    })
 let cuponEnvio = false;
 function cupon() {
     const cuponInput = $(".cupon").val();
