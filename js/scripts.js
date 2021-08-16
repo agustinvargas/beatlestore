@@ -61,7 +61,7 @@ class Remeras {
     };
 }
 function mercadolibreApi() {
-    const urlMl = 'https://api.mercadolibre.com/sites/MLA/search?q=remeras%20beatles&seller_id=189848245&limit=9#json' // Link a la API de MeLi
+    const urlMl = 'https://api.mercadolibre.com/sites/MLA/search?q=remeras%20beatles' // Link a la API de MeLi
     let misDatos = [];
     $.getJSON(urlMl, (data) => {
         console.log(data.results)
